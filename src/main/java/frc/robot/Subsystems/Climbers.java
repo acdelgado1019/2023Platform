@@ -162,10 +162,10 @@ public class Climbers extends SubsystemBase{
 
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Right Climber Position ", climberEncoderRight.getDistance());
-        SmartDashboard.putNumber("Left Climber Position ", climberEncoderLeft.getDistance());
-        SmartDashboard.putNumber("Left Rotator Position ", -leftRotateEncoder.getDistance());
-        SmartDashboard.putNumber("Right Rotator Position ", rightRotateEncoder.getDistance());
+        SmartDashboard.putNumber("Right Climber Position ", climberEncoderRight.getDistance()/8);
+        SmartDashboard.putNumber("Left Climber Position ", climberEncoderLeft.getDistance()/8);
+        SmartDashboard.putNumber("Left Rotator Position ", -Units.radiansToDegrees(leftRotateEncoder.getDistance()));
+        SmartDashboard.putNumber("Right Rotator Position ", Units.radiansToDegrees(rightRotateEncoder.getDistance()));
     }
 
     public double getRightEncoder(){
