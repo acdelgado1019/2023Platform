@@ -39,10 +39,10 @@ public class ClimbersTOCom extends CommandBase{
 
         if (controller1_dpad == 180){
             var lPIDOutput =
-                Robot.climbers.L_controller.calculate(Robot.climbers.getLeftEncoder(), Units.degreesToRadians(Constants.LarmPositionDeg));
+                Robot.climbers.L_controller.calculate(Robot.climbers.getLeftEncoder(), Units.degreesToRadians(Constants.LRotatorPositionDeg));
             Robot.climbers.setLeftClimberRotation(lPIDOutput);
             var rPIDOutput =
-                Robot.climbers.R_controller.calculate(Robot.climbers.getRightEncoder(), Units.degreesToRadians(Constants.RarmPositionDeg));
+                Robot.climbers.R_controller.calculate(Robot.climbers.getRightEncoder(), Units.degreesToRadians(Constants.RRotatorPositionDeg));
             Robot.climbers.setRightClimberRotation(rPIDOutput);
         } else {
             var lPIDOutput =

@@ -1,5 +1,7 @@
 package frc.robot.Commands;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -25,7 +27,22 @@ public class IntakeTOCom extends CommandBase{
         boolean controller1_rightTrigger = Robot.controller1.getTrigger(Constants.RIGHT_TRIGGER);
 
         Robot.shooterIntake.setHorizontalIntake(controller0_leftTrigger ? Constants.HORIZONTAL_INTAKE_SPEED : (controller0_leftBumper ? -Constants.HORIZONTAL_INTAKE_SPEED : 0));
-        Robot.shooterIntake.setIntakeLift(controller0_rightBumper ? Constants.INTAKE_LIFT_SPEED : (controller0_rightTrigger ? -Constants.INTAKE_LIFT_SPEED : 0));
+        
+        if (controller0_rightBumper){
+            var pidOutput =
+                Robot.shooterIntake.Lift_controller.calculate(Robot.shooterIntake.getEncoder(), Units.degreesToRadians(Constants.hiILPositionDeg));
+            Robot.shooterIntake.setIntakeLift(pidOutput);
+        } else if(controller0_rightTrigger){
+            var pidOutput =
+                Robot.shooterIntake.Lift_controller.calculate(Robot.shooterIntake.getEncoder(), Units.degreesToRadians(Constants.midILPositionDeg));
+            Robot.shooterIntake.setIntakeLift(pidOutput);
+        } else{
+            var pidOutput =
+                Robot.shooterIntake.Lift_controller.calculate(Robot.shooterIntake.getEncoder(), Units.degreesToRadians(Constants.loILPositionDeg));
+            Robot.shooterIntake.setIntakeLift(pidOutput);
+        }
+
+        SmartDashboard.putNumber("Setpoint Lift", Units.radiansToDegrees(Robot.shooterIntake.Lift_controller.getSetpoint()));
         
         if (controller1_rightBumper){
             Robot.shooterIntake.pulse();

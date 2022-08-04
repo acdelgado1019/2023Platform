@@ -27,10 +27,16 @@
       "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
+      "/LiveWindow/Ungrouped/PWMSparkMax[18]": "Motor Controller",
+      "/LiveWindow/Ungrouped/PWMSparkMax[3]": "Motor Controller",
+      "/LiveWindow/Ungrouped/PWMSparkMax[5]": "Motor Controller",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Intake Lift Sim": "Mechanism2d",
       "/SmartDashboard/Left Arm Sim": "Mechanism2d",
+      "/SmartDashboard/Left Rotator Sim": "Mechanism2d",
       "/SmartDashboard/Right Arm Sim": "Mechanism2d",
+      "/SmartDashboard/Right Rotator Sim": "Mechanism2d",
       "/SmartDashboard/Scheduler": "Scheduler",
       "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/SendableChooser[1]": "String Chooser"
@@ -54,12 +60,17 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Left Arm Sim": {
+      "/SmartDashboard/Intake Lift Sim": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/Right Arm Sim": {
+      "/SmartDashboard/Left Rotator Sim": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Right Rotator Sim": {
         "window": {
           "visible": true
         }

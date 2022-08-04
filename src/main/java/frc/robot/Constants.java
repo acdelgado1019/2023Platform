@@ -92,21 +92,28 @@ public class Constants {
         public static final double camAngle = 15;
 
     //Climber Constants
-        public static final double m_armReduction = 30;
-        public static final double m_armMass = 5.2; // Kilograms
-        public static final double m_armLength = Units.inchesToMeters(40);
-        public static final double kArmEncoderDistPerPulse = 2.0 * Math.PI / 4000;
+        public static final double m_RotatorReduction = 30;
+        public static final double m_RotatorMass = 5.2; // Kilograms
+        public static final double m_RotatorLength = Units.inchesToMeters(40);
+        public static final double kRotatorEncoderDistPerPulse = 2.0 * Math.PI / 42/125;
 
-        public static final String kLArmPositionKey = "LArmPosition";
-        public static final String kLArmPKey = "LArmP";
-        public static final String kRArmPositionKey = "RArmPosition";
-        public static final String kRArmPKey = "RArmP";
+        // The P gain for the PID controller that drives this Rotator.
+        public static double kLRotatorKp = 5;
+        public static double LRotatorPositionDeg = -26.0;
 
-        // The P gain for the PID controller that drives this arm.
-        public static double kLArmKp = 50;
-        public static double LarmPositionDeg = -26.0;
+        // The P gain for the PID controller that drives this Rotator.
+        public static double kRRotatorKp = 5;
+        public static double RRotatorPositionDeg = 26.0;
 
-        // The P gain for the PID controller that drives this arm.
-        public static double kRArmKp = 50;
-        public static double RarmPositionDeg = 26.0;
+    //Intake Lift Constants
+        public static final double m_IntakeLiftReduction = 125;
+        public static final double m_IntakeLiftMass = 8; // Kilograms
+        public static final double m_IntakeLiftLength = Units.inchesToMeters(40);
+        public static final double kIntakeLiftEncoderDistPerPulse = 2.0 * Math.PI / 42/125;
+
+        // The P gain for the PID controller that drives this Lift.
+        public static double kIntakeLiftKp = 5;
+        public static double hiILPositionDeg = -10;
+        public static double midILPositionDeg = -50;
+        public static double loILPositionDeg = -80;
 }

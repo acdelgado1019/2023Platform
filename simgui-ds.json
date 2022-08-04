@@ -1,4 +1,19 @@
 {
+  "FMS": {
+    "window": {
+      "visible": false
+    }
+  },
+  "Keyboard 0 Settings": {
+    "window": {
+      "visible": true
+    }
+  },
+  "Keyboard 1 Settings": {
+    "window": {
+      "visible": true
+    }
+  },
   "System Joysticks": {
     "window": {
       "visible": false
@@ -31,8 +46,8 @@
         -1,
         67,
         86,
-        -1,
-        -1,
+        49,
+        50,
         -1,
         -1
       ],
