@@ -1,0 +1,7 @@
+[NetworkTables Storage 3.0]
+string "/Preferences/.type"="RobotPreferences"
+double "/Preferences/ArmP"=50
+double "/Preferences/ArmPosition"=75
+double "/Preferences/LeftArmP"=50
+double "/Preferences/LeftArmPosition"=75
+double "/Preferences/RightArmPosition"=75
