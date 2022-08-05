@@ -24,10 +24,10 @@ public class AutoMethods {
     public static Trajectory trajectory;
     public static RamseteCommand ramseteCommand;
 
-    public static void limelightShoot(double power)
+    public static void limelightShoot()
     {
         double degOff = Robot.limelight.getTX();
-        Robot.shooter.setShooterMotor(power);
+        Robot.shooter.setShooterMotor(Constants.SHOOTER_IDLE_SPEED);
         while(Math.abs(degOff) > 1 && Robot.limelight.getTV() != 0)
         {
             double speed = .15 * degOff/(Math.abs(degOff));

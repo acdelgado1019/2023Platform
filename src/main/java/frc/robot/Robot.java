@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -126,7 +125,6 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("Intake Lift Sim", shooterIntake.intake_mech2d);
     shooterIntake.intakeTower.setColor(new Color8Bit(Color.kFirstRed));
-    
   }
 
   /**
@@ -157,14 +155,13 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     if (preMoveMode){
       if (autoSequence == "One Ball Auto"){
-        AutoMethods.timerDrive(0.6, 2);
         SmartDashboard.putString("Auto Step", "Delay");
         Timer.delay(0);
 
         SmartDashboard.putString("Auto Step", "Intake Down");
         AutoMethods.lowerIntake();
         SmartDashboard.putString("Auto Step", "Shooting");
-        AutoMethods.limelightShoot(Constants.SHOOTER_HI_SPEED);
+        AutoMethods.limelightShoot();
         SmartDashboard.putString("Auto Step", "Run Away");
       } else if (autoSequence == "Two Ball Auto"){
         SmartDashboard.putString("Auto Step", "Intake Down");
@@ -176,7 +173,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putString("Auto Step", "Intake Down");
         AutoMethods.lowerIntake();
         SmartDashboard.putString("Auto Step", "Shooting");
-        AutoMethods.limelightShoot(Constants.SHOOTER_HI_SPEED);
+        AutoMethods.limelightShoot();
         SmartDashboard.putString("Auto Step", "Run Intake");
         AutoMethods.runIntake(Constants.HORIZONTAL_INTAKE_SPEED);
         SmartDashboard.putString("Auto Step", "Collect");
@@ -199,12 +196,12 @@ public class Robot extends TimedRobot {
           SmartDashboard.putString("Auto Step", "Stop Intake");
           AutoMethods.runIntake(0);
           SmartDashboard.putString("Auto Step", "Shoot");
-          AutoMethods.limelightShoot(Constants.SHOOTER_LOW_SPEED);
+          AutoMethods.limelightShoot();
         } else if (autoSequence == "Three Ball Auto") {
           SmartDashboard.putString("Auto Step", "Stop Intake");
           AutoMethods.runIntake(0);
           SmartDashboard.putString("Auto Step", "Shoot");
-          AutoMethods.limelightShoot(Constants.SHOOTER_LOW_SPEED);
+          AutoMethods.limelightShoot();
         }
         postMoveMode = false;
       }

@@ -2,7 +2,9 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Commands.LimelightTOCom;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -55,7 +57,12 @@ public class Limelight extends SubsystemBase {
 
     //Calculates the distance away from the hub across the ground
     public double getDistance(){
-        distance = (Constants.goalHeight - Constants.camHeight)/Math.tan((Constants.camAngle + getTY()) * (Math.PI / 180.0))/12;
+        if(getTV() == 1.0){distance = (Constants.goalHeight - Constants.camHeight)/Math.tan((Constants.camAngle + getTY()) * (Math.PI / 180.0))/12;
+        } else {
+            double x = Robot.drivetrain.odometry.getPoseMeters().getX();
+            double y = Robot.drivetrain.odometry.getPoseMeters().getY();
+            distance = Units.metersToFeet(Math.sqrt((x-8.2)*(x-8.2)+(y-4.1)*(y-4.1)));
+        }
         SmartDashboard.putNumber("Distance", distance);
         return distance;
     }

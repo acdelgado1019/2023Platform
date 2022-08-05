@@ -75,7 +75,7 @@
       "axisCount": 6,
       "buttonCount": 8,
       "buttonKeys": [
-        -1,
+        262,
         264,
         265,
         263,
@@ -93,11 +93,6 @@
       "povCount": 1
     },
     {
-      "axisConfig": [
-        {
-          "incKey": 262
-        }
-      ],
       "axisCount": 2,
       "buttonCount": 6,
       "buttonKeys": [

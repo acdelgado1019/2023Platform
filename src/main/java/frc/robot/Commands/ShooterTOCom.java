@@ -1,6 +1,5 @@
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -28,7 +27,7 @@ public class ShooterTOCom extends CommandBase{
         }else if(controller1_buttonY == true){
             Robot.shooter.setShooterMotor(Constants.SHOOTER_MID_SPEED);
         }else if(!Robot.climbers.getClimbMode()){
-            Robot.shooter.setShooterMotor(Constants.SHOOTER_IDLE_SPEED);
+            Robot.shooter.setShooterMotor(Robot.shooter.shooterSpeedAdjust(Robot.limelight.getDistance()));
         }else {Robot.shooter.setShooterMotor(0);}
         Robot.shooter.updateDashboard();
     }
