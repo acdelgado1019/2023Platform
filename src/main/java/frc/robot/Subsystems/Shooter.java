@@ -4,18 +4,44 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Commands.ShooterTOCom;
 
 public class Shooter extends SubsystemBase{
-    private CANSparkMax shooter;
-    private static RelativeEncoder shooterEncoder;
+    private PWMSparkMax shooter;
+    private static Encoder shooterEncoder = new Encoder(17,18);
+    private final DCMotorSim shooterSim = new DCMotorSim(DCMotor.getNEO(1),1, 0.000666);
+    private EncoderSim shooterEncoder_Sim = new EncoderSim(shooterEncoder);
+
+    private double currDist = 0.0;
+    private double prevDist = 0.0;
+    private double currTime = 0.0;
+    private double prevTime = Timer.getFPGATimestamp();
 
     public Shooter(int shoot){
-        shooter = new CANSparkMax(shoot, MotorType.kBrushless);
-        shooterEncoder = shooter.getEncoder();
+        shooter = new PWMSparkMax(shoot);
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        // In this method, we update our simulation of what our Rotator is doing
+        // First, we set our "inputs" (voltages)
+        shooterSim.setInput(shooter.get() * RobotController.getBatteryVoltage());
+
+        // Next, we update it. The standard loop time is 20ms.
+        shooterSim.update(0.020);
+
+        // Finally, we set our simulated encoder's readings and simulated battery voltage
+        shooterEncoder_Sim.setDistance(shooterSim.getAngularPositionRad());
     }
 
     public void setShooterMotor(double speed){
@@ -40,7 +66,14 @@ public class Shooter extends SubsystemBase{
     }
 
     public void updateDashboard(){
-        SmartDashboard.putNumber("Shooter Speed ", shooterEncoder.getVelocity());
+        currDist = shooterEncoder.getDistance()/(2 * Math.PI);
+        currTime = Timer.getFPGATimestamp();
+        if (currTime - prevTime > 0.5){
+            double rate = 120*(prevDist - currDist)/(currTime - prevTime);
+            SmartDashboard.putNumber("Shooter Speed ", rate);
+            prevTime = currTime;
+            prevDist = currDist;
+        }
     } 
 
     @Override

@@ -105,7 +105,6 @@ public class Robot extends TimedRobot {
     // Put the choosers on the dashboard
     SmartDashboard.putData(m_chooser);
     SmartDashboard.putData(t_chooser);
-    SmartDashboard.putString("System Testing", "NOT TESTED");
     SmartDashboard.putString("Auto Step", "NOT STARTED");
 
     AutoMethods.getConstraint();

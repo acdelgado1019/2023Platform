@@ -2,15 +2,13 @@ package frc.robot.Subsystems;
 
 import java.util.HashMap;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -24,14 +22,14 @@ import frc.robot.Constants;
 import frc.robot.Commands.ClimbersTOCom;
 
 public class Climbers extends SubsystemBase{
-    private static CANSparkMax leftClimber0;
-    private static CANSparkMax leftClimber1;
+    private static PWMSparkMax leftClimber0;
+    private static PWMSparkMax leftClimber1;
     private static PWMSparkMax leftClimberRotate;
-    private static CANSparkMax rightClimber0;
-    private static CANSparkMax rightClimber1;
+    private static PWMSparkMax rightClimber0;
+    private static PWMSparkMax rightClimber1;
     private static PWMSparkMax rightClimberRotate;
-    private Encoder climberEncoderRight = new Encoder(12, 13);
-    private Encoder climberEncoderLeft = new Encoder(10, 11);
+    private Encoder climberEncoderRight = new Encoder(13, 14);
+    private Encoder climberEncoderLeft = new Encoder(15, 16);
     private Encoder rightRotateEncoder = new Encoder(4, 5);
     private Encoder leftRotateEncoder = new Encoder(6, 7);
     public final PIDController L_controller = new PIDController(Constants.kLRotatorKp, 0, 0);
@@ -64,10 +62,8 @@ public class Climbers extends SubsystemBase{
         null
     );
 
-    private EncoderSim leftRotateEncoder_Sim = new EncoderSim(leftRotateEncoder);
-    private EncoderSim rightRotateEncoder_Sim = new EncoderSim(rightRotateEncoder);
-    private EncoderSim climberEncoderRight_Sim = new EncoderSim(climberEncoderRight);
-    private EncoderSim climberEncoderLeft_Sim = new EncoderSim(climberEncoderLeft);
+    private final DCMotorSim rightClimber = new DCMotorSim(DCMotor.getNEO(2),1, 0.0000666);
+    private final DCMotorSim leftClimber = new DCMotorSim(DCMotor.getNEO(2),1, 0.0000666);
 
     public final Mechanism2d L_mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d L_RotatorPivot = L_mech2d.getRoot("LeftRotatorPivot", 30, 30);
@@ -81,19 +77,24 @@ public class Climbers extends SubsystemBase{
     private final MechanismLigament2d R_Rotator =
         R_RotatorPivot.append(new MechanismLigament2d("Right Rotator", 30, Units.radiansToDegrees(rightClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kRed)));
     
+    private EncoderSim leftRotateEncoder_Sim = new EncoderSim(leftRotateEncoder);
+    private EncoderSim rightRotateEncoder_Sim = new EncoderSim(rightRotateEncoder);
+    private EncoderSim climberEncoderRight_Sim = new EncoderSim(climberEncoderRight);
+    private EncoderSim climberEncoderLeft_Sim = new EncoderSim(climberEncoderLeft);
+    
     private boolean climbMode = false;
 
 
     public Climbers(int climberL0, int climberL1, int climberLR, int climberR0, int climberR1, int climberRR) {
-        leftClimber0 = new CANSparkMax(climberL0, MotorType.kBrushless);
-        leftClimber1 = new CANSparkMax(climberL1, MotorType.kBrushless);
+        leftClimber0 = new PWMSparkMax(climberL0);
+        leftClimber1 = new PWMSparkMax(climberL1);
         leftClimberRotate = new PWMSparkMax(climberLR);
-        rightClimber0 = new CANSparkMax(climberR0, MotorType.kBrushless);
-        rightClimber1 = new CANSparkMax(climberR1, MotorType.kBrushless);
+        rightClimber0 = new PWMSparkMax(climberR0);
+        rightClimber1 = new PWMSparkMax(climberR1);
         rightClimberRotate = new PWMSparkMax(climberRR);
 
-        climberEncoderRight.setDistancePerPulse(Constants.kRotatorEncoderDistPerPulse);
-        climberEncoderLeft.setDistancePerPulse(Constants.kRotatorEncoderDistPerPulse);
+        climberEncoderRight.setDistancePerPulse(Constants.kClimberEncoderDistPerPulse);
+        climberEncoderLeft.setDistancePerPulse(Constants.kClimberEncoderDistPerPulse);
         rightRotateEncoder.setDistancePerPulse(Constants.kRotatorEncoderDistPerPulse);
         leftRotateEncoder.setDistancePerPulse(Constants.kRotatorEncoderDistPerPulse);    
     }
@@ -105,12 +106,20 @@ public class Climbers extends SubsystemBase{
         // First, we set our "inputs" (voltages)
         rightClimberRotate_Sim.setInput(rightClimberRotate.get() * RobotController.getBatteryVoltage());
         leftClimberRotate_Sim.setInput(leftClimberRotate.get() * RobotController.getBatteryVoltage());
+        rightClimber.setInput(rightClimber0.get() * RobotController.getBatteryVoltage());
+        leftClimber.setInput(leftClimber0.get() * RobotController.getBatteryVoltage());
+
         // Next, we update it. The standard loop time is 20ms.
         rightClimberRotate_Sim.update(0.020);
         leftClimberRotate_Sim.update(0.020);
+        rightClimber.update(0.020);
+        leftClimber.update(0.020);
+
         // Finally, we set our simulated encoder's readings and simulated battery voltage
         rightRotateEncoder_Sim.setDistance(rightClimberRotate_Sim.getAngleRads());
         leftRotateEncoder_Sim.setDistance(leftClimberRotate_Sim.getAngleRads());
+        climberEncoderLeft_Sim.setDistance(leftClimber.getAngularPositionRotations());
+        climberEncoderRight_Sim.setDistance(rightClimber.getAngularPositionRotations());
 
         R_Rotator.setAngle(Units.radiansToDegrees(rightClimberRotate_Sim.getAngleRads()));
         L_Rotator.setAngle(Units.radiansToDegrees(leftClimberRotate_Sim.getAngleRads()));
@@ -146,7 +155,11 @@ public class Climbers extends SubsystemBase{
     }
 
     public void setClimbMode(){
-        climbMode = !climbMode;
+        climbMode = true;
+    }
+
+    public void resetClimbMode(){
+        climbMode = false;
     }
 
     public boolean getClimbMode(){
@@ -162,10 +175,11 @@ public class Climbers extends SubsystemBase{
 
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Right Climber Position ", climberEncoderRight.getDistance()/8);
-        SmartDashboard.putNumber("Left Climber Position ", climberEncoderLeft.getDistance()/8);
+        SmartDashboard.putNumber("Right Climber Position ", climberEncoderRight.getDistance());
+        SmartDashboard.putNumber("Left Climber Position ", climberEncoderLeft.getDistance());
         SmartDashboard.putNumber("Left Rotator Position ", -Units.radiansToDegrees(leftRotateEncoder.getDistance()));
         SmartDashboard.putNumber("Right Rotator Position ", Units.radiansToDegrees(rightRotateEncoder.getDistance()));
+        SmartDashboard.putBoolean("Climb Mode", climbMode);
     }
 
     public double getRightEncoder(){

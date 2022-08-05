@@ -22,13 +22,13 @@ public class ClimbersTOCom extends CommandBase{
 
         double controller1_dpad = Robot.controller1.getPOV();
 
+        if(Robot.controller1.getButton(8)){Robot.climbers.resetClimbMode();}
+
         if(controller1_leftTrigger){
-            SmartDashboard.putString("Climb", "EXTENDING+");
             Robot.climbers.setClimbMode();
             Robot.climbers.setLeftClimber(-1);
             Robot.climbers.setRightClimber(-1);
         } else if (controller1_leftBumper) {
-            SmartDashboard.putString("Climb", "RETRACTING-");
             Robot.climbers.setClimbMode();
             Robot.climbers.setLeftClimber(1);
             Robot.climbers.setRightClimber(1);
@@ -53,7 +53,5 @@ public class ClimbersTOCom extends CommandBase{
             Robot.climbers.setRightClimberRotation(rPIDOutput);
         }
         Robot.climbers.updateDashboard();
-        SmartDashboard.putNumber("Setpoint L", Units.radiansToDegrees(Robot.climbers.L_controller.getSetpoint()));
-        SmartDashboard.putNumber("Setpoint R", Units.radiansToDegrees(Robot.climbers.R_controller.getSetpoint()));
     }
 }

@@ -42,8 +42,6 @@ public class IntakeTOCom extends CommandBase{
             Robot.shooterIntake.setIntakeLift(pidOutput);
         }
 
-        SmartDashboard.putNumber("Setpoint Lift", Units.radiansToDegrees(Robot.shooterIntake.Lift_controller.getSetpoint()));
-        
         if (controller1_rightBumper){
             Robot.shooterIntake.pulse();
         } else if (controller1_rightTrigger){

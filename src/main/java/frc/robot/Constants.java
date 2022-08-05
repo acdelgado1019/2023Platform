@@ -95,7 +95,8 @@ public class Constants {
         public static final double m_RotatorReduction = 30;
         public static final double m_RotatorMass = 5.2; // Kilograms
         public static final double m_RotatorLength = Units.inchesToMeters(40);
-        public static final double kRotatorEncoderDistPerPulse = 2.0 * Math.PI / 42/30;
+        public static final double kRotatorEncoderDistPerPulse = 2.0 * Math.PI / m_RotatorReduction;
+        public static final double kClimberEncoderDistPerPulse = 2.0 * Math.PI / 8;
 
         // The P gain for the PID controller that drives this Rotator.
         public static double kLRotatorKp = 5;
