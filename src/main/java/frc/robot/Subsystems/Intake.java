@@ -33,7 +33,11 @@ public class Intake extends SubsystemBase{
 
     private boolean pulsing = false;
 
+    //Simulated hardware
     private static final DCMotor m_GearBox = DCMotor.getNEO(1);
+    private EncoderSim intakeLiftEncoder_Sim = new EncoderSim(intakeLiftEncoder);
+
+    //The intake can be modeled by an arm simulator - think arm on a pivot
     private final SingleJointedArmSim intakeLift_Sim =
       new SingleJointedArmSim(
         m_GearBox,
@@ -47,8 +51,7 @@ public class Intake extends SubsystemBase{
         null
     );
 
-    private EncoderSim intakeLiftEncoder_Sim = new EncoderSim(intakeLiftEncoder);
-
+    //Graphic display in the simulator
     public final Mechanism2d intake_mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d intakePivot = intake_mech2d.getRoot("IntakePivot", 30, 30);
     public final MechanismLigament2d intakeTower = intakePivot.append(new MechanismLigament2d("IntakeTower", 30, 180));
@@ -60,7 +63,7 @@ public class Intake extends SubsystemBase{
         6, 
         new Color8Bit(Color.kDarkRed)));
 
-
+    //Intake Constructor
     public Intake (int horIntake, int vertIntake, int inLift) {
         horizontalIntake = new VictorSPX(horIntake);
         trigger = new VictorSPX(vertIntake);
@@ -98,6 +101,7 @@ public class Intake extends SubsystemBase{
         intakeLift.setVoltage(voltage);
     }
 
+    //Pulses the trigger in half-second increments to allow for flywheel recovery
     public void pulse(){
         if (pulsing == false){
             pulsing = true;
@@ -122,6 +126,7 @@ public class Intake extends SubsystemBase{
         return intakeLiftEncoder.getDistance();
     }
 
+    //Every scheduler cycle, we pass our XBox controls so we can control the intake.
     @Override
     public void periodic(){
         setDefaultCommand(new IntakeTOCom());

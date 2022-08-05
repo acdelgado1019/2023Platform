@@ -60,11 +60,11 @@ public class Drivetrain extends SubsystemBase{
 
         m_driveSim = new DifferentialDrivetrainSim(
             DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
-            6,                    // 7.29:1 gearing reduction.
-            4.8,                     // MOI of 7.5 kg m^2 (from CAD model).
-            47.6,                    // The mass of the robot is 60 kg.
+            6,                    // 6:1 gearing reduction.
+            4.8,                     // MOI of 4.8 kg m^2 (need to obtain from CAD model).
+            47.6,                    // The mass of the robot is 105 lbs -> 47.6 kg.
             Units.inchesToMeters(3), // The robot uses 3" radius wheels.
-            Constants.kTrackwidthMeters,                  // The track width is 0.7112 meters.
+            Constants.kTrackwidthMeters, //Distance between wheels
 
             // The standard deviations for measurement noise:
             // x and y:          0.001 m
@@ -84,6 +84,7 @@ public class Drivetrain extends SubsystemBase{
         SmartDashboard.putData("Field", m_field);
     }
 
+    //Every scheduler cycle, we pass our XBox controls so we can control the drivetrain and update its pose in the dashboards
     @Override
     public void periodic(){
         odometry.update(m_gyro.getRotation2d(),
@@ -102,9 +103,7 @@ public class Drivetrain extends SubsystemBase{
         m_driveSim.setInputs(motorLeft1.get() * RobotController.getBatteryVoltage(),
         motorRight1.get() * RobotController.getBatteryVoltage());
 
-        // Advance the model by 20 ms. Note that if you are running this
-        // subsystem in a separate thread or have changed the nominal timestep
-        // of TimedRobot, this value needs to match it.
+        // Advance the model by 20 ms
         m_driveSim.update(0.02);
 
         // Update all of our sensors.
@@ -179,11 +178,4 @@ public class Drivetrain extends SubsystemBase{
         m_drive.feed();
     }
 
-    public HashMap<String, Double> getEncoderValues()
-    {
-        HashMap<String, Double> encoderMap = new HashMap<String, Double>();
-        encoderMap.put("rightDrivetrain", m_leftEncoder.getDistance());
-        encoderMap.put("leftDrivetrain", m_rightEncoder.getDistance());
-        return encoderMap;
-    }
 }
