@@ -1,6 +1,7 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -46,9 +47,12 @@ public class IntakeTOCom extends CommandBase{
         } else if (controller1_rightTrigger){
             Robot.shooterIntake.setTrigger(-Constants.TRIGGER_SPEED);
             Robot.shooterIntake.stopPulse();
-        } else {
+            Robot.ledStrip.solid(30);
+        } else if (!Robot.climbers.getClimbMode()){
             Robot.shooterIntake.setTrigger(0);
             Robot.shooterIntake.stopPulse();
+            Robot.ledStrip.teamColor(Constants.teamColor);
         }
+        
     }
 }
