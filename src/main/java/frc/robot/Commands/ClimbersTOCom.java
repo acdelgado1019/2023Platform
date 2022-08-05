@@ -36,6 +36,8 @@ public class ClimbersTOCom extends CommandBase{
             Robot.climbers.setRightClimber(controller1_rightJoystickY);
         }
 
+        if (Robot.climbers.getClimbMode()){Robot.ledStrip.rainbow();}
+
         if (controller1_dpad == 180){
             var lPIDOutput =
                 Robot.climbers.L_controller.calculate(Robot.climbers.getLeftEncoder(), Units.degreesToRadians(Constants.LRotatorPositionDeg));

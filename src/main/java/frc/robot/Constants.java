@@ -59,6 +59,9 @@ public class Constants {
         public static final int LEFT_JOYSTICK_BUTTON = 9;
         public static final int RIGHT_JOYSTICK_BUTTON = 10;
 
+        //FMS Data
+        public static String teamColor;
+
     //Speed Variables
         public static final double MAX_DRIVE_SPEED = .8; // Min = 0, Max = 1
         // public static final double FULL_SPEED = 1;

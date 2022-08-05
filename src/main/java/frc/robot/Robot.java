@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -19,6 +20,7 @@ import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Limelight;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.LEDs;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -56,6 +58,8 @@ public class Robot extends TimedRobot {
   );
   
   public static final Limelight limelight = new Limelight();
+
+  public static final LEDs ledStrip = new LEDs(4,10);
 
   //Controllers
   public static final Controller controller0 = new Controller(Constants.DRIVER_CONTROLLER_0);
@@ -143,6 +147,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    Constants.teamColor = DriverStation.getAlliance().toString();
     climbers.resetEncoders();
     shooterIntake.resetEncoder();
     preMoveMode = true;
@@ -211,11 +216,13 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    Constants.teamColor = DriverStation.getAlliance().toString();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
@@ -243,6 +250,7 @@ public class Robot extends TimedRobot {
     AutoMethods.getTrajectory(path);
     m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
     AutoMethods.resetOdometry(AutoMethods.trajectory);
+    ledStrip.rainbow();
   }
 
   /** This function is called once when test mode is enabled. */

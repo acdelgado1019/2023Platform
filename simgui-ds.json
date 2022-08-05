@@ -1,9 +1,4 @@
 {
-  "FMS": {
-    "window": {
-      "visible": false
-    }
-  },
   "Keyboard 0 Settings": {
     "window": {
       "visible": true
@@ -68,8 +63,13 @@
       "axisConfig": [
         {},
         {
-          "decKey": 73,
+          "decKey": 73
+        },
+        {
           "incKey": 75
+        },
+        {
+          "incKey": 77
         }
       ],
       "axisCount": 6,
@@ -80,7 +80,7 @@
         265,
         263,
         -1,
-        -1,
+        47,
         -1,
         70
       ],

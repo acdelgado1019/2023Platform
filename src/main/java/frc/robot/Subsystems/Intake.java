@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Commands.IntakeTOCom;
 
 
@@ -106,9 +108,13 @@ public class Intake extends SubsystemBase{
         if (pulsing == false){
             pulsing = true;
         }
-        if (Timer.getFPGATimestamp() % 1 > 0.5){
+        if (Timer.getFPGATimestamp() % 1 < 0.5){
             setTrigger(Constants.TRIGGER_SPEED);
-        } else {setTrigger(0);}
+            Robot.ledStrip.solid(60);
+        } else {
+            setTrigger(0);
+            Robot.ledStrip.solid(90);
+        }
         SmartDashboard.putBoolean("Firing", (Timer.getFPGATimestamp() % 1)<0.5);
     }
 

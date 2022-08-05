@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "Addressable LEDs": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
       "AnalogGyro[1]": {
         "header": {
@@ -42,6 +47,11 @@
       "/SmartDashboard/SendableChooser[1]": "String Chooser"
     },
     "windows": {
+      "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field": {
         "height": 8.229999542236328,
         "image": "/Users/antoniosave/Downloads/2022_Field_Crop_White.png",
@@ -111,7 +121,7 @@
               "lockMin": true
             }
           ],
-          "height": 338,
+          "height": 288,
           "legend": false,
           "series": [
             {
