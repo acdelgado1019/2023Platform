@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Commands.ShooterTOCom;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class Shooter extends SubsystemBase{
     //Use PWMSparkMax, CANSparkMax not Sim supported well right now
@@ -30,6 +29,7 @@ public class Shooter extends SubsystemBase{
 
         //Update Sim -> Advance clock 20 ms
         shooterSim.update(0.020);
+        SmartDashboard.putNumber("Shooter Current", shooterSim.getCurrentDrawAmps());
     }
 
     //Runs the motor with a given voltage - We want the motor to spin counter-clockwise, so the voltage needs to be negative

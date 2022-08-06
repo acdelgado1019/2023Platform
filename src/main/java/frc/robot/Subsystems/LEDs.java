@@ -13,7 +13,6 @@ public class LEDs extends SubsystemBase{
     private AddressableLEDSim m_led_sim;
     // Store what the last hue of the first pixel is
     private int m_rainbowFirstPixelHue;
-    private int m_tcFirstPixelVal;
 
     //Shooter constructor - creates a shooter in robot memory
     public LEDs(int pwmPort, int bufferSize){

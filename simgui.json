@@ -21,6 +21,7 @@
       "/FMSInfo": "FMSInfo",
       "/LiveWindow/Climbers": "Subsystem",
       "/LiveWindow/Intake": "Subsystem",
+      "/LiveWindow/LEDs": "Subsystem",
       "/LiveWindow/Limelight": "Subsystem",
       "/LiveWindow/Shooter": "Subsystem",
       "/LiveWindow/ShooterIntake": "Subsystem",
@@ -32,9 +33,14 @@
       "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
+      "/LiveWindow/Ungrouped/PWMSparkMax[10]": "Motor Controller",
+      "/LiveWindow/Ungrouped/PWMSparkMax[11]": "Motor Controller",
+      "/LiveWindow/Ungrouped/PWMSparkMax[12]": "Motor Controller",
+      "/LiveWindow/Ungrouped/PWMSparkMax[15]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMSparkMax[18]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMSparkMax[3]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMSparkMax[5]": "Motor Controller",
+      "/LiveWindow/Ungrouped/PWMSparkMax[9]": "Motor Controller",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Intake Lift Sim": "Mechanism2d",
@@ -47,11 +53,6 @@
       "/SmartDashboard/SendableChooser[1]": "String Chooser"
     },
     "windows": {
-      "/FMSInfo": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "height": 8.229999542236328,
         "image": "/Users/antoniosave/Downloads/2022_Field_Crop_White.png",
@@ -121,8 +122,32 @@
               "lockMin": true
             }
           ],
-          "height": 288,
-          "legend": false,
+          "height": 297,
+          "series": [
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/Shooter Rate ",
+              "yAxis": 1
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "axis": [
+            {
+              "autoFit": true,
+              "lockMin": true
+            }
+          ],
+          "height": 294,
           "series": [
             {
               "color": [
@@ -131,16 +156,7 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/SmartDashboard/Shooter Speed "
-            },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/SmartDashboard/Shooter Rate "
+              "id": "NT:/SmartDashboard/Shooter Current"
             }
           ]
         }
