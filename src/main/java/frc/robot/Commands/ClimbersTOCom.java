@@ -16,21 +16,21 @@ public class ClimbersTOCom extends CommandBase{
         double controller1_leftJoystickY = Robot.controller1.getJoystickAxis(Constants.LEFT_STICK_Y);
         double controller1_rightJoystickY = Robot.controller1.getJoystickAxis(Constants.RIGHT_STICK_Y);
 
-        boolean controller1_leftTrigger = Robot.controller1.getTrigger(Constants.LEFT_TRIGGER);
-        boolean controller1_leftBumper = Robot.controller1.getButton(Constants.LEFT_BUMPER);
+        boolean controller1_rightTrigger = Robot.controller1.getButton(Constants.RIGHT_TRIGGER);
+        boolean controller1_rightBumper = Robot.controller1.getButton(Constants.RIGHT_BUMPER);
 
         double controller1_dpad = Robot.controller1.getPOV();
 
-        if(Robot.controller1.getButton(8)){Robot.climbers.resetClimbMode();}
+        if(Robot.controller1.getButton(Constants.BUTTON_BACK)){Robot.climbers.resetClimbMode();}
 
-        if(controller1_leftTrigger){
-            Robot.climbers.setClimbMode();
-            Robot.climbers.setLeftClimber(-1);
-            Robot.climbers.setRightClimber(-1);
-        } else if (controller1_leftBumper) {
+        if(controller1_rightTrigger){
             Robot.climbers.setClimbMode();
             Robot.climbers.setLeftClimber(1);
             Robot.climbers.setRightClimber(1);
+        } else if (controller1_rightBumper) {
+            Robot.climbers.setClimbMode();
+            Robot.climbers.setLeftClimber(-1);
+            Robot.climbers.setRightClimber(-1);
         } else {
             Robot.climbers.setLeftClimber(controller1_leftJoystickY);
             Robot.climbers.setRightClimber(controller1_rightJoystickY);

@@ -27,7 +27,7 @@ public class AutoMethods {
     public static void limelightShoot()
     {
         double degOff = Robot.limelight.getTX();
-        Robot.shooter.setShooterMotor(Constants.SHOOTER_IDLE_SPEED);
+        Robot.shooter.setShooterMotor(Constants.SHOOTER_MID_SPEED);
         while(Math.abs(degOff) > 1 && Robot.limelight.getTV() != 0)
         {
             double speed = .15 * degOff/(Math.abs(degOff));
@@ -39,10 +39,9 @@ public class AutoMethods {
         Robot.drivetrain.setLeftDrivetrain(0);
         Robot.drivetrain.setRightDrivetrain(0);
         delay(1);
-        Robot.shooterIntake.stopPulse();
-        Robot.shooterIntake.pulse();
-        delay(2.5);
-        Robot.shooterIntake.stopPulse();
+        Robot.shooterIntake.setTrigger(Constants.TRIGGER_SPEED);
+        delay(1);
+        Robot.shooterIntake.setTrigger(0);
         Robot.shooter.setShooterMotor(Constants.SHOOTER_IDLE_SPEED);
     }
 

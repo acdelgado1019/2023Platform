@@ -9,11 +9,6 @@
       "visible": true
     }
   },
-  "System Joysticks": {
-    "window": {
-      "visible": false
-    }
-  },
   "keyboardJoysticks": [
     {
       "axisConfig": [
@@ -68,9 +63,6 @@
         },
         {
           "incKey": 75
-        },
-        {
-          "incKey": 77
         }
       ],
       "axisCount": 6,
@@ -80,7 +72,7 @@
         264,
         265,
         263,
-        -1,
+        77,
         47,
         -1,
         70
@@ -113,11 +105,9 @@
     }
   ],
   "robotJoysticks": [
+    {},
     {
-      "guid": "Keyboard0"
-    },
-    {
-      "guid": "Keyboard1"
+      "guid": "030000006d04000016c2000014040000"
     }
   ]
 }
