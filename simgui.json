@@ -33,6 +33,7 @@
       "/LiveWindow/Ungrouped/PIDController[4]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
       "/LiveWindow/Ungrouped/PWMSparkMax[10]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMSparkMax[11]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMSparkMax[12]": "Motor Controller",

@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,6 +48,22 @@ public class LEDs extends SubsystemBase{
         m_rainbowFirstPixelHue %= 180;
         update();
     }
+
+    public void flash(String isRed){
+      int hue = (isRed == "Red") ? 0 : 120;
+      if (Timer.getFPGATimestamp() % 1 < 0.5){
+        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+          // Set the value
+          m_ledBuffer.setHSV(i, hue, 255, 255);
+        }
+      } else {
+        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+          // Set the value
+          m_ledBuffer.setHSV(i, hue, 255, 0);
+        }
+      }
+      update();
+  }
 
     public void solid(int hue) {
         // For every pixel

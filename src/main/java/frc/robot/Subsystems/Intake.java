@@ -93,6 +93,7 @@ public class Intake extends SubsystemBase{
 
     public void setHorizontalIntake(double speed) {
         horizontalIntake.set(ControlMode.PercentOutput, speed);
+        SmartDashboard.putNumber("Intake Value", speed);
     }
 
     public void setTrigger(double speed) {
