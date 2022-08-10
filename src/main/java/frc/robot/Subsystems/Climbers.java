@@ -62,8 +62,8 @@ public class Climbers extends SubsystemBase{
         null
     );
 
-    private final DCMotorSim rightClimber = new DCMotorSim(DCMotor.getNEO(2),1, 0.0000666);
-    private final DCMotorSim leftClimber = new DCMotorSim(DCMotor.getNEO(2),1, 0.0000666);
+    private final DCMotorSim rightClimber = new DCMotorSim(DCMotor.getNEO(2),1, 0.000666);
+    private final DCMotorSim leftClimber = new DCMotorSim(DCMotor.getNEO(2),1, 0.000666);
 
     public final Mechanism2d L_mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d L_RotatorPivot = L_mech2d.getRoot("LeftRotatorPivot", 30, 30);
@@ -142,6 +142,13 @@ public class Climbers extends SubsystemBase{
     public void setRightClimber(double speed){
         rightClimber0.set(-speed);
         rightClimber1.set(-speed);
+    }
+
+    public void setClimberRotation(double setpoint){
+        var lPIDOutput = L_controller.calculate(getLeftEncoder(), -setpoint);
+        setLeftClimberRotation(lPIDOutput);
+        var rPIDOutput = R_controller.calculate(getRightEncoder(), setpoint);
+        setRightClimberRotation(rPIDOutput);
     }
 
     public void setLeftClimberRotation(double voltage)

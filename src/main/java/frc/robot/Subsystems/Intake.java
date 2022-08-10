@@ -78,14 +78,12 @@ public class Intake extends SubsystemBase{
     public void simulationPeriodic() {
         // In this method, we update our simulation of what our Rotator is doing
         // First, we set our "inputs" (voltages)
-        SmartDashboard.putNumber("Output Lift",intakeLift.get() * RobotController.getBatteryVoltage());
         intakeLift_Sim.setInput(intakeLift.get() * RobotController.getBatteryVoltage());
         
         // Next, we update it. The standard loop time is 20ms.
         intakeLift_Sim.update(0.020);
         // Finally, we set our simulated encoder's readings and simulated battery voltage
         intakeLiftEncoder_Sim.setDistance(intakeLift_Sim.getAngleRads());
-        SmartDashboard.putNumber("Lift Angle", intakeLift_Sim.getAngleRads()/Math.PI*180);
 
         // Update the Mechanism Rotator angle based on the simulated Rotator angle
         intake.setAngle(Units.radiansToDegrees(intakeLift_Sim.getAngleRads()));

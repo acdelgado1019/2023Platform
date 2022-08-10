@@ -31,6 +31,7 @@ public class ClimbersTOCom extends CommandBase{
             Robot.climbers.setClimbMode();
             Robot.climbers.setLeftClimber(-1);
             Robot.climbers.setRightClimber(-1);
+            Robot.climbers.setClimberRotation(Units.degreesToRadians(Constants.RotatorUnhookPositionDeg));
         } else {
             Robot.climbers.setLeftClimber(controller1_leftJoystickY);
             Robot.climbers.setRightClimber(controller1_rightJoystickY);
@@ -39,20 +40,11 @@ public class ClimbersTOCom extends CommandBase{
         if (Robot.climbers.getClimbMode()){Robot.ledStrip.rainbow();}
 
         if (controller1_dpad == 180){
-            var lPIDOutput =
-                Robot.climbers.L_controller.calculate(Robot.climbers.getLeftEncoder(), Units.degreesToRadians(Constants.LRotatorPositionDeg));
-            Robot.climbers.setLeftClimberRotation(lPIDOutput);
-            var rPIDOutput =
-                Robot.climbers.R_controller.calculate(Robot.climbers.getRightEncoder(), Units.degreesToRadians(Constants.RRotatorPositionDeg));
-            Robot.climbers.setRightClimberRotation(rPIDOutput);
-        } else {
-            var lPIDOutput =
-                Robot.climbers.L_controller.calculate(Robot.climbers.getLeftEncoder(), Units.degreesToRadians(0));
-            Robot.climbers.setLeftClimberRotation(lPIDOutput);
-            var rPIDOutput =
-                Robot.climbers.R_controller.calculate(Robot.climbers.getRightEncoder(), Units.degreesToRadians(0));
-            Robot.climbers.setRightClimberRotation(rPIDOutput);
+            Robot.climbers.setClimberRotation(Units.degreesToRadians(Constants.RotatorFullPositionDeg));
+        } else if(!controller1_rightBumper){
+            Robot.climbers.setClimberRotation(Units.degreesToRadians(0.0));
         }
+
         Robot.climbers.updateDashboard();
     }
 }

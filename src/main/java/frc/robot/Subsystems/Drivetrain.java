@@ -60,7 +60,7 @@ public class Drivetrain extends SubsystemBase{
         m_driveSim = new DifferentialDrivetrainSim(
             DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
             6,                    // 6:1 gearing reduction.
-            3,                     // MOI of 4.8 kg m^2 (need to obtain from CAD model).
+            1,                     // MOI of 4.8 kg m^2 (need to obtain from CAD model).
             47.6,                    // The mass of the robot is 105 lbs -> 47.6 kg.
             Units.inchesToMeters(3), // The robot uses 3" radius wheels.
             Constants.kTrackwidthMeters, //Distance between wheels

@@ -27,6 +27,8 @@
       "/LiveWindow/ShooterIntake": "Subsystem",
       "/LiveWindow/Ungrouped/AnalogGyro[1]": "Gyro",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[11]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
@@ -34,6 +36,8 @@
       "/LiveWindow/Ungrouped/PIDController[5]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[6]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[7]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[8]": "PIDController",
+      "/LiveWindow/Ungrouped/PIDController[9]": "PIDController",
       "/LiveWindow/Ungrouped/PWMSparkMax[10]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMSparkMax[11]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMSparkMax[12]": "Motor Controller",
@@ -119,7 +123,7 @@
           "antialiased": true,
           "axis": [
             {
-              "lockMax": true,
+              "autoFit": true,
               "lockMin": true
             }
           ],
