@@ -11,7 +11,6 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import java.util.List;
@@ -27,7 +26,6 @@ public class AutoMethods {
     public static void limelightShoot()
     {
         double degOff = Robot.limelight.getTX();
-        Robot.shooter.setShooterMotor(Constants.SHOOTER_MID_SPEED);
         while(Math.abs(degOff) > 1 && Robot.limelight.getTV() != 0)
         {
             double speed = .15 * degOff/(Math.abs(degOff));
@@ -38,10 +36,10 @@ public class AutoMethods {
         }
         Robot.drivetrain.setLeftDrivetrain(0);
         Robot.drivetrain.setRightDrivetrain(0);
-        delay(1);
-        Robot.shooterIntake.setTrigger(Constants.TRIGGER_SPEED);
-        delay(1);
-        Robot.shooterIntake.setTrigger(0);
+        Timer.delay(2);
+        Robot.shooterIntake.pulse();
+        Timer.delay(.5);
+        Robot.shooterIntake.stopPulse();
         Robot.shooter.setShooterMotor(Constants.SHOOTER_IDLE_SPEED);
     }
 
@@ -77,15 +75,6 @@ public class AutoMethods {
             Robot.drivetrain.setLeftDrivetrain(0);
             Robot.drivetrain.setRightDrivetrain(0);
     }   
-
-    public Integer PathSelect(int red, int blue){
-        SmartDashboard.putString("Auto Step", "Start Auto");
-        String team = Robot.t_chooser.getSelected();
-        int path=0;
-        if (team == "RED"){path = red;}
-        else if (team == "BLUE"){path = blue;};
-        return path;
-    }
 
     // Create a voltage constraint to ensure we don't accelerate too fast
     public static DifferentialDriveVoltageConstraint getConstraint(){

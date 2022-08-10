@@ -14,6 +14,7 @@ public class LEDs extends SubsystemBase{
     private AddressableLEDSim m_led_sim;
     // Store what the last hue of the first pixel is
     private int m_rainbowFirstPixelHue;
+    private int m_mardiGrasStartPoint;
 
     //Shooter constructor - creates a shooter in robot memory
     public LEDs(int pwmPort, int bufferSize){
@@ -49,21 +50,24 @@ public class LEDs extends SubsystemBase{
         update();
     }
 
-    public void flash(String isRed){
-      int hue = (isRed == "Red") ? 0 : 120;
-      if (Timer.getFPGATimestamp() % 1 < 0.5){
+    public void mardiGras() {
+      int val;
+      if(Timer.getFPGATimestamp()*100%20>18){
+        // For every pixel
         for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+          final var hue = (int)(30*Math.exp((m_mardiGrasStartPoint+i)%3)-10*(Math.exp((m_mardiGrasStartPoint+i)%3)-1));
+          if (hue>100){val = 200;}
+          else {val = 255;}
           // Set the value
-          m_ledBuffer.setHSV(i, hue, 255, 255);
-        }
-      } else {
-        for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-          // Set the value
-          m_ledBuffer.setHSV(i, hue, 255, 0);
+          m_ledBuffer.setHSV(i, hue, 255, val);
         }
       }
+      // Increase by to make the colors "move"
+      m_mardiGrasStartPoint += 1;
+      // Check bounds
+      m_mardiGrasStartPoint %= 3;
       update();
-  }
+    }
 
     public void solid(int hue) {
         // For every pixel
@@ -82,5 +86,15 @@ public class LEDs extends SubsystemBase{
           m_ledBuffer.setHSV(i, hue, 255, 255);
         }
         update();
+    }
+
+    public void stripeRB() {
+      // For every pixel
+      for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        // Set the value
+        int hue = 120*(i%2);
+        m_ledBuffer.setHSV(i, hue, 255, 255);
+      }
+      update();
     }
 }

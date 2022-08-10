@@ -150,6 +150,7 @@ public class Robot extends TimedRobot {
     Constants.teamColor = DriverStation.getAlliance().toString();
     climbers.resetEncoders();
     shooterIntake.resetEncoder();
+    ledStrip.stripeRB();
     preMoveMode = true;
     moveMode = false;
     postMoveMode = false;
@@ -250,7 +251,7 @@ public class Robot extends TimedRobot {
     AutoMethods.getTrajectory(path);
     m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
     AutoMethods.resetOdometry(AutoMethods.trajectory);
-    ledStrip.rainbow();
+    ledStrip.mardiGras();
   }
 
   /** This function is called once when test mode is enabled. */
