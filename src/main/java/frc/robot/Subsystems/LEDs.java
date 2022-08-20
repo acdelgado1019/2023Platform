@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.AddressableLEDSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase{
@@ -31,7 +30,6 @@ public class LEDs extends SubsystemBase{
 
     public void update() {
         m_led.setData(m_ledBuffer);
-        SmartDashboard.putNumber("LEDs", m_led_sim.getLength());
     }
 
     public void rainbow() {

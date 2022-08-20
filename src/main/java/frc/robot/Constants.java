@@ -109,8 +109,8 @@ public class Constants {
         // The P gain for the PID controller that drives this Rotator.
         public static double kRRotatorKp = 10;
 
-        public static double RotatorFullPositionDeg = 26.0;
-        public static double RotatorUnhookPositionDeg = 3.0;
+        public static double RotatorFullPositionDeg = 116.0;
+        public static double RotatorUnhookPositionDeg = 93.0;
 
     //Intake Lift Constants
         public static final double m_IntakeLiftReduction = 125;
@@ -120,7 +120,7 @@ public class Constants {
 
         // The P gain for the PID controller that drives this Lift.
         public static double kIntakeLiftKp = 5;
-        public static double hiILPositionDeg = -10;
-        public static double midILPositionDeg = -50;
-        public static double loILPositionDeg = -80;
+        public static double hiILPositionDeg = 70;
+        public static double midILPositionDeg = 30;
+        public static double loILPositionDeg = 0;
 }

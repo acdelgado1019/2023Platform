@@ -42,7 +42,7 @@ public class ClimbersTOCom extends CommandBase{
         if (controller1_dpad == 180){
             Robot.climbers.setClimberRotation(Units.degreesToRadians(Constants.RotatorFullPositionDeg));
         } else if(!controller1_rightBumper){
-            Robot.climbers.setClimberRotation(Units.degreesToRadians(0.0));
+            Robot.climbers.setClimberRotation(Units.degreesToRadians(90.0));
         }
 
         Robot.climbers.updateDashboard();

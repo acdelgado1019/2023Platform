@@ -2,7 +2,6 @@ package frc.robot.Subsystems;
 
 import frc.robot.Constants;
 import frc.robot.Commands.DrivetrainTOCom;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -46,6 +45,8 @@ public class Drivetrain extends SubsystemBase{
     public DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.kTrackwidthMeters);
     public DifferentialDriveOdometry odometry;
 
+    public double initPose = 0;
+
     public Drivetrain (int l0, int l1, int r0, int r1){
         motorLeft0 = new CANSparkMax(l0, MotorType.kBrushless);
         motorLeft1 = new CANSparkMax(l1, MotorType.kBrushless);
@@ -70,7 +71,7 @@ public class Drivetrain extends SubsystemBase{
             // heading:          0.001 rad
             // l and r velocity: 0.1   m/s
             // l and r position: 0.005 m
-            VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
+            null//VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
         );
 
         m_rightMotors.setInverted(true);
@@ -150,14 +151,9 @@ public class Drivetrain extends SubsystemBase{
         m_drive.setMaxOutput(maxOutput);
     }
 
-    public void zeroHeading(){
-        // get the property
-        gyro.setAngle(0);
-    }
-
     public double getHeading(){
         // get the property
-        return gyro.getAngle();
+        return -gyro.getAngle();
     }
 
     public double getTurnRate() {

@@ -43,8 +43,8 @@ public class Climbers extends SubsystemBase{
         Constants.m_RotatorReduction,
         SingleJointedArmSim.estimateMOI(Constants.m_RotatorLength, Constants.m_RotatorMass),
         Constants.m_RotatorLength,
-        Units.degreesToRadians(-26),
-        Units.degreesToRadians(0),
+        Units.degreesToRadians(64),
+        Units.degreesToRadians(90),
         Constants.m_RotatorMass,
         false,
         null
@@ -55,8 +55,8 @@ public class Climbers extends SubsystemBase{
         Constants.m_RotatorReduction,
         SingleJointedArmSim.estimateMOI(Constants.m_RotatorLength, Constants.m_RotatorMass),
         Constants.m_RotatorLength,
-        Units.degreesToRadians(0),
-        Units.degreesToRadians(26),
+        Units.degreesToRadians(90),
+        Units.degreesToRadians(116),
         Constants.m_RotatorMass,
         false,
         null
@@ -67,13 +67,13 @@ public class Climbers extends SubsystemBase{
 
     public final Mechanism2d L_mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d L_RotatorPivot = L_mech2d.getRoot("LeftRotatorPivot", 30, 30);
-    public final MechanismLigament2d L_RotatorTower = L_RotatorPivot.append(new MechanismLigament2d("LeftRotatorTower", 30, 180));
+    public final MechanismLigament2d L_RotatorTower = L_RotatorPivot.append(new MechanismLigament2d("LeftRotatorTower", 30, -90));
     private final MechanismLigament2d L_Rotator =
         L_RotatorPivot.append(new MechanismLigament2d("Left Rotator", 30, Units.radiansToDegrees(leftClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kDarkRed)));
 
     public final Mechanism2d R_mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d R_RotatorPivot = R_mech2d.getRoot("RightRotatorPivot", 30, 30);
-    public final MechanismLigament2d R_RotatorTower = R_RotatorPivot.append(new MechanismLigament2d("RightRotatorTower", 30, 180));
+    public final MechanismLigament2d R_RotatorTower = R_RotatorPivot.append(new MechanismLigament2d("RightRotatorTower", 30, -90));
     private final MechanismLigament2d R_Rotator =
         R_RotatorPivot.append(new MechanismLigament2d("Right Rotator", 30, Units.radiansToDegrees(rightClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kRed)));
     
@@ -145,10 +145,11 @@ public class Climbers extends SubsystemBase{
     }
 
     public void setClimberRotation(double setpoint){
-        var lPIDOutput = L_controller.calculate(getLeftEncoder(), -setpoint);
+        var lPIDOutput = L_controller.calculate(getLeftEncoder(), Units.degreesToRadians(90.0)-(setpoint-Units.degreesToRadians(90.0)));
         setLeftClimberRotation(lPIDOutput);
         var rPIDOutput = R_controller.calculate(getRightEncoder(), setpoint);
         setRightClimberRotation(rPIDOutput);
+        SmartDashboard.putNumber("SetPoint", Units.degreesToRadians(90.0)-(setpoint-Units.degreesToRadians(90.0)));
     }
 
     public void setLeftClimberRotation(double voltage)
