@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Limelight extends SubsystemBase {
 
     public double distance;
+    public double offset;
 
     private NetworkTable table;
     private NetworkTableEntry tx;
@@ -65,6 +66,17 @@ public class Limelight extends SubsystemBase {
         }
         SmartDashboard.putNumber("Distance", distance);
         return distance;
+    }
+
+    //Calculates angle off target
+    public double getOffset(){
+        double x = (Robot.drivetrain.odometry.getPoseMeters().getX()-8.2);
+        double y = (Robot.drivetrain.odometry.getPoseMeters().getY()-4.1);
+        
+        if (x<0) {offset = Units.radiansToDegrees(Math.atan(y/x));} 
+        else {offset = Units.radiansToDegrees(Math.atan(y/x))-180*(y/Math.abs(y));}
+
+        return offset;
     }
 
     //Switches from thresholding mode to pure camera mode

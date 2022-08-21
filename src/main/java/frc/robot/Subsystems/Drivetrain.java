@@ -38,14 +38,14 @@ public class Drivetrain extends SubsystemBase{
     public DifferentialDrivetrainSim m_driveSim;
 
     public AnalogGyro m_gyro = new AnalogGyro(1);
-    private AnalogGyroSim gyro = new AnalogGyroSim(m_gyro);
+    public AnalogGyroSim gyro = new AnalogGyroSim(m_gyro);
 
     private Field2d m_field = new Field2d();
 
     public DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.kTrackwidthMeters);
     public DifferentialDriveOdometry odometry;
 
-    public double initPose = 0;
+    public double initPose = 0.0;
 
     public Drivetrain (int l0, int l1, int r0, int r1){
         motorLeft0 = new CANSparkMax(l0, MotorType.kBrushless);

@@ -50,13 +50,17 @@ public class Shooter extends SubsystemBase{
     //Adjusts the pose of the robot to center on the hub
     public void limelightTrack()
     {
-        double degOff = Robot.limelight.getTX();
-        if(Math.abs(degOff) > 1 && Robot.limelight.getTV() != 0)
-        {
-            double speed = .15 * degOff/(Math.abs(degOff));
-            Robot.drivetrain.setLeftDrivetrain(-speed);
-            Robot.drivetrain.setRightDrivetrain(speed);
+        double degOff = 0.0;
+        
+        if(Robot.limelight.getTV() != 0){
             degOff = Robot.limelight.getTX();
+        } else {
+            degOff = Robot.drivetrain.getHeading()%360 - Robot.limelight.getOffset() + Robot.drivetrain.initPose;
+        }
+        if(Math.abs(degOff) > 5){
+                double speed = .15 * degOff/90;
+                Robot.drivetrain.setLeftDrivetrain(speed);
+                Robot.drivetrain.setRightDrivetrain(speed);
         }
     }
 

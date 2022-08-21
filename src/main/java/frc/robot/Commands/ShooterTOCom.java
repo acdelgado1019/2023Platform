@@ -19,7 +19,6 @@ public class ShooterTOCom extends CommandBase{
 
         if(controller0_buttonA == true){
             Robot.shooter.setShooterMotor(Robot.shooter.shooterSpeedAdjust(Robot.limelight.getDistance()));
-            Robot.shooter.limelightTrack();
         }else if(controller1_buttonA == true){
             Robot.shooter.setShooterMotor(Constants.SHOOTER_LOW_SPEED);
         }else if(controller1_buttonY == true){

@@ -107,7 +107,14 @@
     "LiveWindow": {
       ".status": {
         "open": true
-      }
+      },
+      "Ungrouped": {
+        "AnalogGyro[1]": {
+          "open": true
+        },
+        "open": true
+      },
+      "open": true
     },
     "SmartDashboard": {
       "Scheduler": {

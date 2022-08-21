@@ -106,6 +106,7 @@ public class AutoMethods {
     // Trajectory to follow.  All units in meters.
     public static Trajectory getTrajectory(int path){
         if (path == 1){
+            Robot.drivetrain.initPose = 136.5;
             trajectory =
             TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing ball
@@ -117,6 +118,7 @@ public class AutoMethods {
             // Pass config
             config);
         } else if (path == 2){
+            Robot.drivetrain.initPose = 80;
             trajectory =
             TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing goal
@@ -128,6 +130,7 @@ public class AutoMethods {
             // Pass config
             config);
         } else if (path == 3){
+            Robot.drivetrain.initPose = -43.5;
             trajectory =
             TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing ball
@@ -139,6 +142,7 @@ public class AutoMethods {
             // Pass config
             config);
         } else if (path == 4){
+            Robot.drivetrain.initPose = -100;
             trajectory =
             TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing goal
@@ -161,6 +165,7 @@ public class AutoMethods {
             // Pass config
             config);
         } else if (path == 6){
+            Robot.drivetrain.initPose = 180;
             trajectory =
             TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing goal
