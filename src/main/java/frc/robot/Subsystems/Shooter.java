@@ -47,23 +47,6 @@ public class Shooter extends SubsystemBase{
         return outputVoltage;
     }
 
-    //Adjusts the pose of the robot to center on the hub
-    public void limelightTrack()
-    {
-        double degOff = 0.0;
-        
-        if(Robot.limelight.getTV() != 0){
-            degOff = Robot.limelight.getTX();
-        } else {
-            degOff = Robot.drivetrain.getHeading()%360 - Robot.limelight.getOffset() + Robot.drivetrain.initPose;
-        }
-        if(Math.abs(degOff) > 5){
-                double speed = .15 * degOff/90;
-                Robot.drivetrain.setLeftDrivetrain(speed);
-                Robot.drivetrain.setRightDrivetrain(speed);
-        }
-    }
-
     //Updates the shuffle/smart dashboards with flywheel spin rate in RPM
     public void updateDashboard(){
             SmartDashboard.putNumber("Shooter Rate ", -shooterSim.getAngularVelocityRPM());

@@ -1,5 +1,6 @@
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -25,10 +26,12 @@ public class DrivetrainTOCom extends CommandBase{
         rightMotorSet = ((controller0_leftStickY + (Constants.LEFT_RIGHT_TRIM + (controller0_rightStickX * Constants.MAX_TURN_SPEED))) * Constants.MAX_DRIVE_SPEED);
 
         //Set motors
-        if(controller0_buttonA){Robot.shooter.limelightTrack();
+        if(controller0_buttonA){Robot.drivetrain.limelightTrack();
         } else {
             Robot.drivetrain.setLeftDrivetrain(leftMotorSet);
             Robot.drivetrain.setRightDrivetrain(rightMotorSet);
         }
+        SmartDashboard.putNumber("Heading", Robot.drivetrain.getNormHeading());
+        SmartDashboard.putNumber("Offset", Robot.limelight.getOffset());
     }
 }

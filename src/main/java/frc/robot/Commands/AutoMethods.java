@@ -36,9 +36,9 @@ public class AutoMethods {
         }
         Robot.drivetrain.setLeftDrivetrain(0);
         Robot.drivetrain.setRightDrivetrain(0);
-        Timer.delay(2);
+        //Timer.delay(0.5);
         Robot.shooterIntake.pulse();
-        Timer.delay(.5);
+        Timer.delay(1);
         Robot.shooterIntake.stopPulse();
         Robot.shooter.setShooterMotor(Constants.SHOOTER_IDLE_SPEED);
     }

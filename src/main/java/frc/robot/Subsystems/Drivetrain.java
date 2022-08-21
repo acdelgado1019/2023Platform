@@ -1,6 +1,7 @@
 package frc.robot.Subsystems;
 
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.Commands.DrivetrainTOCom;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -156,6 +157,18 @@ public class Drivetrain extends SubsystemBase{
         return -gyro.getAngle();
     }
 
+    public double getNormHeading(){
+        double heading = 0.0;
+        if((getHeading()+ initPose) % 360 > -180 && (getHeading()+ initPose) % 360 < 180){
+            heading = (getHeading()+ initPose)%360;
+        } else if((getHeading()+ initPose) % 360 < -180){
+            heading = 360 + (getHeading()+ initPose)%360;
+        } else if((getHeading()+ initPose) % 360 > 180){
+            heading = -360 + (getHeading()+ initPose)%360;
+        }
+        return heading;
+    }
+
     public double getTurnRate() {
         return -gyro.getRate();
     }
@@ -172,5 +185,22 @@ public class Drivetrain extends SubsystemBase{
         motorRight1.set(-speed);
         m_drive.feed();
     }
+
+        //Adjusts the pose of the robot to center on the hub
+        public void limelightTrack()
+        {
+            double degOff = 0.0;
+            
+            if(Robot.limelight.getTV() != 0){
+                degOff = Robot.limelight.getTX();
+            } else {
+                degOff = getNormHeading() - Robot.limelight.getOffset();
+            }
+            if(Math.abs(degOff) > 1){
+                    double speed = .15 * degOff/90;
+                    setLeftDrivetrain(speed);
+                    setRightDrivetrain(speed);
+            }
+        }
 
 }
