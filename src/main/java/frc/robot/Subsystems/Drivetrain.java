@@ -195,6 +195,7 @@ public class Drivetrain extends SubsystemBase{
                 degOff = Robot.limelight.getTX();
             } else {
                 degOff = getNormHeading() - Robot.limelight.getOffset();
+                if (Math.abs(degOff)>180){degOff = -360+degOff;}
             }
             if(Math.abs(degOff) > 1){
                     double speed = .15 * degOff/90;

@@ -8,7 +8,7 @@ import frc.robot.Robot;
 public class IntakeTOCom extends CommandBase{
 
     public IntakeTOCom(){
-        addRequirements(Robot.shooterIntake);
+        addRequirements(Robot.intake);
     }
 
     @Override
@@ -25,29 +25,29 @@ public class IntakeTOCom extends CommandBase{
         boolean controller1_leftBumper = Robot.controller1.getButton(Constants.LEFT_BUMPER);
         boolean controller1_leftTrigger = Robot.controller1.getButton(Constants.LEFT_TRIGGER);
 
-        Robot.shooterIntake.setHorizontalIntake(controller1_leftTrigger ? Constants.HORIZONTAL_INTAKE_SPEED : (controller1_leftBumper ? -Constants.HORIZONTAL_INTAKE_SPEED : 0));
+        Robot.intake.setHorizontalIntake(controller1_leftTrigger ? Constants.HORIZONTAL_INTAKE_SPEED : (controller1_leftBumper ? -Constants.HORIZONTAL_INTAKE_SPEED : 0));
         
         if (controller0_rightBumper){
             var pidOutput =
-                Robot.shooterIntake.Lift_controller.calculate(Robot.shooterIntake.getEncoder(), Units.degreesToRadians(Constants.midILPositionDeg));
-            Robot.shooterIntake.setIntakeLift(pidOutput);
+                Robot.intake.Lift_controller.calculate(Robot.intake.getEncoder(), Units.degreesToRadians(Constants.midILPositionDeg));
+            Robot.intake.setIntakeLift(pidOutput);
         } else if(controller0_rightTrigger){
             var pidOutput =
-                Robot.shooterIntake.Lift_controller.calculate(Robot.shooterIntake.getEncoder(), Units.degreesToRadians(Constants.hiILPositionDeg));
-            Robot.shooterIntake.setIntakeLift(pidOutput);
+                Robot.intake.Lift_controller.calculate(Robot.intake.getEncoder(), Units.degreesToRadians(Constants.hiILPositionDeg));
+            Robot.intake.setIntakeLift(pidOutput);
         } else{
             var pidOutput =
-                Robot.shooterIntake.Lift_controller.calculate(Robot.shooterIntake.getEncoder(), Units.degreesToRadians(Constants.loILPositionDeg));
-            Robot.shooterIntake.setIntakeLift(pidOutput);
+                Robot.intake.Lift_controller.calculate(Robot.intake.getEncoder(), Units.degreesToRadians(Constants.loILPositionDeg));
+            Robot.intake.setIntakeLift(pidOutput);
         }
 
         if (controller0_leftBumper){
-            Robot.shooterIntake.pulse();
+            Robot.intake.pulse();
         } else if (controller0_leftTrigger){
-            Robot.shooterIntake.setTrigger(-Constants.TRIGGER_SPEED);
+            Robot.intake.setTrigger(-Constants.TRIGGER_SPEED);
         } else if (!Robot.climbers.getClimbMode()){
-            Robot.shooterIntake.setTrigger(0);
-            Robot.shooterIntake.stopPulse();
+            Robot.intake.setTrigger(0);
+            Robot.intake.stopPulse();
             Robot.ledStrip.teamColor(Constants.teamColor);
         }
         

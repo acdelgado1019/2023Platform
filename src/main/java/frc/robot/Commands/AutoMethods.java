@@ -37,20 +37,20 @@ public class AutoMethods {
         Robot.drivetrain.setLeftDrivetrain(0);
         Robot.drivetrain.setRightDrivetrain(0);
         //Timer.delay(0.5);
-        Robot.shooterIntake.pulse();
+        Robot.intake.pulse();
         Timer.delay(1);
-        Robot.shooterIntake.stopPulse();
+        Robot.intake.stopPulse();
         Robot.shooter.setShooterMotor(Constants.SHOOTER_IDLE_SPEED);
     }
 
     public static void runIntake(double speed){
-        Robot.shooterIntake.setHorizontalIntake(speed);
+        Robot.intake.setHorizontalIntake(speed);
     }
 
     public static void lowerIntake(){
-        Robot.shooterIntake.setIntakeLift(-Constants.INTAKE_LIFT_SPEED);
+        Robot.intake.setIntakeLift(-Constants.INTAKE_LIFT_SPEED);
         delay(2);
-        Robot.shooterIntake.setIntakeLift(0);
+        Robot.intake.setIntakeLift(0);
     }
     
     public static void timerDrive(double power, double time) {
