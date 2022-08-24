@@ -36,7 +36,7 @@ public class AutoMethods {
         }
         Robot.drivetrain.setLeftDrivetrain(0);
         Robot.drivetrain.setRightDrivetrain(0);
-        //Timer.delay(0.5);
+        Timer.delay(0.5);
         Robot.intake.pulse();
         Timer.delay(1);
         Robot.intake.stopPulse();
@@ -68,14 +68,6 @@ public class AutoMethods {
         }
     }
 
-    public static void rotate(double time){
-            Robot.drivetrain.setLeftDrivetrain(-0.3);
-            Robot.drivetrain.setRightDrivetrain(0.3);
-            delay(time);
-            Robot.drivetrain.setLeftDrivetrain(0);
-            Robot.drivetrain.setRightDrivetrain(0);
-    }   
-
     // Create a voltage constraint to ensure we don't accelerate too fast
     public static DifferentialDriveVoltageConstraint getConstraint(){
         autoVoltageConstraint =
@@ -104,8 +96,29 @@ public class AutoMethods {
     }
 
     // Trajectory to follow.  All units in meters.
-    public static Trajectory getTrajectory(int path){
-        if (path == 1){
+    public static Trajectory getTrajectory(){
+        if (Robot.desiredMode == Robot.DesiredMode.BACK_UP_BLUE){
+            Robot.drivetrain.initPose = 0.0;
+            config.setReversed(true);
+            trajectory =
+            TrajectoryGenerator.generateTrajectory(
+            new Pose2d(5.9, 4.1, new Rotation2d(0)),
+            List.of(new Translation2d(4.5, 4.1), new Translation2d(3, 4.1)),
+            new Pose2d(1, 4.1, new Rotation2d(0)),
+            // Pass config
+            config);
+        } else if (Robot.desiredMode == Robot.DesiredMode.ONE_BALL_BLUE){
+            trajectory =
+            TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing goal
+            new Pose2d(5.9, 4.1, new Rotation2d(0)),
+            // Pass through ball 2 and 3
+            List.of(new Translation2d(4.5, 3.3), new Translation2d(4.5, 3.5)),
+            // Turn to goal and come in range
+            new Pose2d(5.5, 3.9, new Rotation2d(Math.PI/8)),
+            // Pass config
+            config);
+        } else if (Robot.desiredMode == Robot.DesiredMode.TWO_BALL_BLUE){
             Robot.drivetrain.initPose = 136.5;
             trajectory =
             TrajectoryGenerator.generateTrajectory(
@@ -117,7 +130,7 @@ public class AutoMethods {
             new Pose2d(6.1, 6.2, new Rotation2d(-50*Math.PI*2/360)),
             // Pass config
             config);
-        } else if (path == 2){
+        } else if (Robot.desiredMode == Robot.DesiredMode.THREE_BALL_BLUE){
             Robot.drivetrain.initPose = 80;
             trajectory =
             TrajectoryGenerator.generateTrajectory(
@@ -129,42 +142,17 @@ public class AutoMethods {
             new Pose2d(5.5, 2.2, new Rotation2d(-325*Math.PI*2/360)),
             // Pass config
             config);
-        } else if (path == 3){
-            Robot.drivetrain.initPose = -43.5;
+        } else if (Robot.desiredMode == Robot.DesiredMode.BACK_UP_RED){
+            Robot.drivetrain.initPose = 180.0;
+            config.setReversed(true);
             trajectory =
             TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing ball
-            new Pose2d(10.4, 3.0, new Rotation2d(-43.5*Math.PI*2/360)),
-            // pass through ball location
-            List.of(new Translation2d(12, 1.5), new Translation2d(11.5, 1)),
-            // Loop back around, facing goal
-            new Pose2d(10.5, 1.8, new Rotation2d(130.5*Math.PI*2/360)),
+            new Pose2d(10.55, 4.1, new Rotation2d(Math.PI)),
+            List.of(new Translation2d(11, 4.1), new Translation2d(13, 4.1)),
+            new Pose2d(15.5, 4.1, new Rotation2d(Math.PI)),
             // Pass config
             config);
-        } else if (path == 4){
-            Robot.drivetrain.initPose = -100;
-            trajectory =
-            TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing goal
-            new Pose2d(8.75, 6.4, new Rotation2d(-100*Math.PI*2/360)),
-            // Pass through ball 2 and 3
-            List.of(new Translation2d(8.7, 7.5), new Translation2d(11.3, 6.6)),
-            // Turn to goal and come in range
-            new Pose2d(11, 6.3, new Rotation2d(-145*Math.PI*2/360)),
-            // Pass config
-            config);
-        } else if (path == 5){
-            trajectory =
-            TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing goal
-            new Pose2d(5.9, 4.1, new Rotation2d(0)),
-            // Pass through ball 2 and 3
-            List.of(new Translation2d(4.5, 3.3), new Translation2d(4.5, 3.5)),
-            // Turn to goal and come in range
-            new Pose2d(5.5, 3.9, new Rotation2d(Math.PI/8)),
-            // Pass config
-            config);
-        } else if (path == 6){
+        } else if (Robot.desiredMode == Robot.DesiredMode.ONE_BALL_RED){
             Robot.drivetrain.initPose = 180;
             trajectory =
             TrajectoryGenerator.generateTrajectory(
@@ -176,7 +164,31 @@ public class AutoMethods {
             new Pose2d(10.55, 4.1, new Rotation2d(9*Math.PI/8)),
             // Pass config
             config);
-        } else if (path == 100){
+        } else if (Robot.desiredMode == Robot.DesiredMode.TWO_BALL_RED){
+            Robot.drivetrain.initPose = -43.5;
+            trajectory =
+            TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing ball
+            new Pose2d(10.4, 3.0, new Rotation2d(-43.5*Math.PI*2/360)),
+            // pass through ball location
+            List.of(new Translation2d(12, 1.5), new Translation2d(11.5, 1)),
+            // Loop back around, facing goal
+            new Pose2d(10.5, 1.8, new Rotation2d(130.5*Math.PI*2/360)),
+            // Pass config
+            config);
+        } else if (Robot.desiredMode == Robot.DesiredMode.THREE_BALL_RED){
+            Robot.drivetrain.initPose = -100;
+            trajectory =
+            TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing goal
+            new Pose2d(8.75, 6.4, new Rotation2d(-100*Math.PI*2/360)),
+            // Pass through ball 2 and 3
+            List.of(new Translation2d(8.7, 7.5), new Translation2d(11.3, 6.6)),
+            // Turn to goal and come in range
+            new Pose2d(11, 6.3, new Rotation2d(-145*Math.PI*2/360)),
+            // Pass config
+            config);
+        } else if (Robot.desiredMode == Robot.DesiredMode.SLALOM){
             trajectory =
             TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing goal
@@ -195,7 +207,7 @@ public class AutoMethods {
             new Pose2d(1.6, 1.8, new Rotation2d(170*Math.PI/180)),
             // Pass config
             config);
-        } else if (path == 101){
+        } else if (Robot.desiredMode == Robot.DesiredMode.BARREL_RACE){
             trajectory =
             TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing goal
@@ -244,12 +256,12 @@ public class AutoMethods {
         Robot.drivetrain.resetOdometry(pose);
     }
 
-    public static Command runRamsete(int path){
-            autoVoltageConstraint = getConstraint();
-            config = getTrajectoryConfig();
-            trajectory = getTrajectory(path);
-            ramseteCommand = getRamsete();
-            resetOdometry(trajectory);
-            return ramseteCommand.andThen(() -> Robot.drivetrain.tankDriveVolts(0, 0));
-        }
+    public static Command runRamsete(){
+        autoVoltageConstraint = getConstraint();
+        config = getTrajectoryConfig();
+        trajectory = getTrajectory();
+        ramseteCommand = getRamsete();
+        resetOdometry(trajectory);
+        return ramseteCommand.andThen(() -> Robot.drivetrain.tankDriveVolts(0, 0));
+    }
 }

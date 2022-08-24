@@ -66,24 +66,28 @@ public class Robot extends TimedRobot {
   public static final Controller controller1 = new Controller(Constants.DRIVER_CONTROLLER_1);
 
   //Auto Commands
-  public static String autoSequence;
-  public static String team;
-  public static int path = 0;
+  public enum DesiredMode {
+    BACK_UP_BLUE,
+    BACK_UP_RED, 
+    ONE_BALL_RED,
+    ONE_BALL_BLUE,
+    TWO_BALL_RED,
+    TWO_BALL_BLUE,
+    THREE_BALL_RED,
+    THREE_BALL_BLUE,
+    SLALOM,
+    BARREL_RACE
+  }
+
+  public static DesiredMode desiredMode;
   public static String prevAuto = "";
-  public static String prevTeam;
-  public static int prevPath = 0;
-  private final String oneBall = "One Ball Auto";
-  private final String twoBall = "Two Ball Auto";
-  private final String threeBall = "Three Ball Auto";
-  private final String slalom = "Slalom";
-  private final String barrel = "Barrel";
+  public static DesiredMode prevMode;
   public Boolean preMoveMode;
   public Boolean moveMode;
   public Boolean postMoveMode;
   public double timeCheck;
   
-  public static SendableChooser<String> m_chooser = new SendableChooser<>();
-  public static SendableChooser<String> t_chooser = new SendableChooser<>();
+  public static SendableChooser<DesiredMode> m_chooser = new SendableChooser<>();
 
   //Field display to Shuffleboard
   public static Field2d m_field;
@@ -98,18 +102,21 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Three Ball Auto", threeBall);
-    m_chooser.addOption("Two Ball Auto", twoBall);
-    m_chooser.addOption("One Ball Auto", oneBall);
-    m_chooser.addOption("Slalom", slalom);
-    m_chooser.addOption("Barrel", barrel);
-
-    t_chooser.setDefaultOption("Red", "RED");
-    t_chooser.addOption("Blue", "BLUE");
+    m_chooser.setDefaultOption("One Ball Red", DesiredMode.ONE_BALL_RED);
+    m_chooser.addOption("Two Ball Red", DesiredMode.TWO_BALL_RED);
+    m_chooser.addOption("Three Ball Red", DesiredMode.THREE_BALL_RED);
+    m_chooser.addOption("Back Up Red", DesiredMode.BACK_UP_RED);
+    m_chooser.addOption("One Ball Blue", DesiredMode.ONE_BALL_BLUE);
+    m_chooser.addOption("Two Ball Blue", DesiredMode.TWO_BALL_BLUE);
+    m_chooser.addOption("Three Ball Blue", DesiredMode.THREE_BALL_BLUE);
+    m_chooser.addOption("Back Up Blue", DesiredMode.BACK_UP_BLUE);
+    
+    m_chooser.addOption("Slalom", DesiredMode.SLALOM);
+    m_chooser.addOption("Barrel", DesiredMode.BARREL_RACE);
+    
 
     // Put the choosers on the dashboard
     SmartDashboard.putData(m_chooser);
-    SmartDashboard.putData(t_chooser);
 
     AutoMethods.getConstraint();
     AutoMethods.getTrajectoryConfig();
@@ -161,61 +168,47 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     if (preMoveMode){
-      if (autoSequence == "One Ball Auto"){
-        SmartDashboard.putString("Auto Step", "Delay");
+      if (desiredMode == DesiredMode.ONE_BALL_RED || desiredMode == DesiredMode.ONE_BALL_BLUE || 
+          desiredMode == DesiredMode.BACK_UP_RED || desiredMode == DesiredMode.BACK_UP_BLUE){
         Timer.delay(0);
-
-        SmartDashboard.putString("Auto Step", "Intake Down");
         AutoMethods.lowerIntake();
-        SmartDashboard.putString("Auto Step", "Shooting");
         AutoMethods.limelightShoot();
-        SmartDashboard.putString("Auto Step", "Run Away");
-      } else if (autoSequence == "Two Ball Auto"){
-        SmartDashboard.putString("Auto Step", "Intake Down");
+      } else if (desiredMode == DesiredMode.TWO_BALL_RED || desiredMode == DesiredMode.TWO_BALL_BLUE){
         AutoMethods.lowerIntake();
-        SmartDashboard.putString("Auto Step", "Run Intake");
         AutoMethods.runIntake(Constants.HORIZONTAL_INTAKE_SPEED);
-        SmartDashboard.putString("Auto Step", "Collect");
-      } else if (autoSequence == "Three Ball Auto") {
-        SmartDashboard.putString("Auto Step", "Intake Down");
+      } else if (desiredMode == DesiredMode.THREE_BALL_RED || desiredMode == DesiredMode.THREE_BALL_BLUE) {
         AutoMethods.lowerIntake();
-        SmartDashboard.putString("Auto Step", "Shooting");
         AutoMethods.limelightShoot();
-        SmartDashboard.putString("Auto Step", "Run Intake");
         AutoMethods.runIntake(Constants.HORIZONTAL_INTAKE_SPEED);
-        SmartDashboard.putString("Auto Step", "Collect");
       }
       moveMode = true;
       preMoveMode = false;
     } else if (moveMode){
-      AutoMethods.runRamsete(path).schedule();
+      AutoMethods.runRamsete().schedule();
       postMoveMode = true;
       moveMode = false;
       timeCheck = Timer.getFPGATimestamp();
     } else if (postMoveMode){
-        if (autoSequence == "One Ball Auto"){
-          if(Timer.getFPGATimestamp() - timeCheck > 3){
-          SmartDashboard.putString("Auto Step", "Run Intake");
+      if (desiredMode == DesiredMode.BACK_UP_RED || desiredMode == DesiredMode.BACK_UP_BLUE){
+          postMoveMode = false;
+      } else if (desiredMode == DesiredMode.ONE_BALL_RED || desiredMode == DesiredMode.ONE_BALL_BLUE){
+        if(Timer.getFPGATimestamp() - timeCheck > 3){
           AutoMethods.runIntake(-Constants.HORIZONTAL_INTAKE_SPEED);
           postMoveMode = false;
-          }
-        } else if (autoSequence == "Two Ball Auto"){
-          if(Timer.getFPGATimestamp() - timeCheck > 3){
-            SmartDashboard.putString("Auto Step", "Stop Intake");
-            AutoMethods.runIntake(0);
-            SmartDashboard.putString("Auto Step", "Shoot");
-            AutoMethods.limelightShoot();
-            postMoveMode = false;
-          }
-        } else if (autoSequence == "Three Ball Auto") {
-          if(Timer.getFPGATimestamp() - timeCheck > 4){
-            SmartDashboard.putString("Auto Step", "Stop Intake");
-            AutoMethods.runIntake(0);
-            SmartDashboard.putString("Auto Step", "Shoot");
-            AutoMethods.limelightShoot();
-            postMoveMode = false;
-          }
         }
+      } else if (desiredMode == DesiredMode.TWO_BALL_RED || desiredMode == DesiredMode.TWO_BALL_BLUE){
+        if(Timer.getFPGATimestamp() - timeCheck > 3){
+          AutoMethods.runIntake(0);
+          AutoMethods.limelightShoot();
+          postMoveMode = false;
+        }
+      } else if (desiredMode == DesiredMode.THREE_BALL_RED || desiredMode == DesiredMode.THREE_BALL_BLUE) {
+        if(Timer.getFPGATimestamp() - timeCheck > 4){
+          AutoMethods.runIntake(0);
+          AutoMethods.limelightShoot();
+          postMoveMode = false;
+        }
+      }
     }
   }
 
@@ -241,25 +234,15 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-    autoSequence = m_chooser.getSelected();
-    team = Robot.t_chooser.getSelected();
-
-    if (team == "RED" && autoSequence == "One Ball Auto"){path = 6;}
-    else if (team == "BLUE" && autoSequence == "One Ball Auto"){path = 5;}
-    else if (team == "RED" && autoSequence == "Three Ball Auto"){path = 4;}
-    else if (team == "RED" && autoSequence == "Two Ball Auto"){path = 3;}
-    else if (team == "BLUE" && autoSequence == "Three Ball Auto"){path = 2;}
-    else if (team == "BLUE" && autoSequence == "Two Ball Auto"){path = 1;}
-    else if (autoSequence == "Slalom"){path = 100;}
-    else if (autoSequence == "Barrel"){path = 101;}
+    desiredMode = m_chooser.getSelected();
     
-    if (prevPath!=path || prevTeam != team){
-      AutoMethods.getTrajectory(path);
+    if (prevMode!=desiredMode){
+      AutoMethods.getTrajectory();
       m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
       AutoMethods.resetOdometry(AutoMethods.trajectory);
-      prevPath = path;
-      prevTeam = team;
+      prevMode = desiredMode;
     }
+
     ledStrip.mardiGras();
   }
 
