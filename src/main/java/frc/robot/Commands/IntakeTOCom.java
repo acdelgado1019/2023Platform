@@ -45,7 +45,7 @@ public class IntakeTOCom extends CommandBase{
             Robot.intake.pulse();
         } else if (controller0_leftTrigger){
             Robot.intake.setTrigger(-Constants.TRIGGER_SPEED);
-        } else if (!Robot.climbers.getClimbMode()){
+        } else if (!Robot.climbers.getClimbMode() && Robot.autoSection == Robot.AutoSection.EXIT_AUTO){
             Robot.intake.setTrigger(0);
             Robot.intake.stopPulse();
             Robot.ledStrip.teamColor(Constants.teamColor);

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -79,12 +80,19 @@ public class Robot extends TimedRobot {
     BARREL_RACE
   }
 
+  public enum AutoSection {
+    STARTUP,
+    OPENING_ACTION,
+    MOVEMENT,
+    CLOSING_ACTION,
+    FINISH,
+    EXIT_AUTO
+  }
+
   public static DesiredMode desiredMode;
-  public static String prevAuto = "";
   public static DesiredMode prevMode;
-  public Boolean preMoveMode;
-  public Boolean moveMode;
-  public Boolean postMoveMode;
+  public static AutoSection autoSection;
+  public static String prevAuto = "";
   public double timeCheck;
   
   public static SendableChooser<DesiredMode> m_chooser = new SendableChooser<>();
@@ -159,62 +167,66 @@ public class Robot extends TimedRobot {
     climbers.resetEncoders();
     intake.resetEncoder();
     ledStrip.stripeRB();
-    preMoveMode = true;
-    moveMode = false;
-    postMoveMode = false;
+    autoSection = AutoSection.STARTUP;
+    timeCheck = Timer.getFPGATimestamp();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (preMoveMode){
+    if (autoSection == AutoSection.STARTUP){  
+      var pidOutput = Robot.intake.Lift_controller.calculate(
+      Robot.intake.getEncoder(), 
+      Units.degreesToRadians(Constants.loILPositionDeg));
+      Robot.intake.setIntakeLift(pidOutput);
+      Robot.shooter.setShooterMotor(Robot.shooter.shooterSpeedAdjust(Robot.limelight.getDistance()));
+      if(Timer.getFPGATimestamp() - timeCheck > 1.5){autoSection = AutoSection.OPENING_ACTION;}      
+    } else if (autoSection == AutoSection.OPENING_ACTION){
       if (desiredMode == DesiredMode.ONE_BALL_RED || desiredMode == DesiredMode.ONE_BALL_BLUE || 
           desiredMode == DesiredMode.BACK_UP_RED || desiredMode == DesiredMode.BACK_UP_BLUE){
-        Timer.delay(0);
-        AutoMethods.lowerIntake();
         AutoMethods.limelightShoot();
       } else if (desiredMode == DesiredMode.TWO_BALL_RED || desiredMode == DesiredMode.TWO_BALL_BLUE){
-        AutoMethods.lowerIntake();
         AutoMethods.runIntake(Constants.HORIZONTAL_INTAKE_SPEED);
       } else if (desiredMode == DesiredMode.THREE_BALL_RED || desiredMode == DesiredMode.THREE_BALL_BLUE) {
-        AutoMethods.lowerIntake();
         AutoMethods.limelightShoot();
         AutoMethods.runIntake(Constants.HORIZONTAL_INTAKE_SPEED);
       }
-      moveMode = true;
-      preMoveMode = false;
-    } else if (moveMode){
+      autoSection = AutoSection.MOVEMENT;
+    } else if (autoSection == AutoSection.MOVEMENT){
+      ledStrip.stripeRB();
       AutoMethods.runRamsete().schedule();
-      postMoveMode = true;
-      moveMode = false;
+      autoSection = AutoSection.CLOSING_ACTION;
       timeCheck = Timer.getFPGATimestamp();
-    } else if (postMoveMode){
+    } else if (autoSection == AutoSection.CLOSING_ACTION){
       if (desiredMode == DesiredMode.BACK_UP_RED || desiredMode == DesiredMode.BACK_UP_BLUE){
-          postMoveMode = false;
+        autoSection = AutoSection.FINISH;
       } else if (desiredMode == DesiredMode.ONE_BALL_RED || desiredMode == DesiredMode.ONE_BALL_BLUE){
-        if(Timer.getFPGATimestamp() - timeCheck > 3){
+        if(Timer.getFPGATimestamp() - timeCheck > 3.5){
           AutoMethods.runIntake(-Constants.HORIZONTAL_INTAKE_SPEED);
-          postMoveMode = false;
+          autoSection = AutoSection.FINISH;
         }
       } else if (desiredMode == DesiredMode.TWO_BALL_RED || desiredMode == DesiredMode.TWO_BALL_BLUE){
         if(Timer.getFPGATimestamp() - timeCheck > 3){
           AutoMethods.runIntake(0);
           AutoMethods.limelightShoot();
-          postMoveMode = false;
+          autoSection = AutoSection.FINISH;
         }
       } else if (desiredMode == DesiredMode.THREE_BALL_RED || desiredMode == DesiredMode.THREE_BALL_BLUE) {
         if(Timer.getFPGATimestamp() - timeCheck > 4){
           AutoMethods.runIntake(0);
           AutoMethods.limelightShoot();
-          postMoveMode = false;
+          autoSection = AutoSection.FINISH;
         }
       }
+    } else if (autoSection == AutoSection.FINISH){
+      ledStrip.rainbow();
     }
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    autoSection = AutoSection.EXIT_AUTO;
     Constants.teamColor = DriverStation.getAlliance().toString();
   }
 

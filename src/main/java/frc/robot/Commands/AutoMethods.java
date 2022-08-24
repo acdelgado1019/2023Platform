@@ -32,25 +32,17 @@ public class AutoMethods {
             Robot.drivetrain.setLeftDrivetrain(-speed);
             Robot.drivetrain.setRightDrivetrain(speed);
             degOff = Robot.limelight.getTX();
-            Robot.shooter.setShooterMotor(Robot.shooter.shooterSpeedAdjust(Robot.limelight.getDistance()));
         }
         Robot.drivetrain.setLeftDrivetrain(0);
         Robot.drivetrain.setRightDrivetrain(0);
-        Timer.delay(0.5);
-        Robot.intake.pulse();
+        Robot.intake.setTrigger(Constants.TRIGGER_SPEED);
+        Robot.ledStrip.solid(60);
         Timer.delay(1);
-        Robot.intake.stopPulse();
-        Robot.shooter.setShooterMotor(Constants.SHOOTER_IDLE_SPEED);
+        Robot.intake.setTrigger(0);
     }
 
     public static void runIntake(double speed){
         Robot.intake.setHorizontalIntake(speed);
-    }
-
-    public static void lowerIntake(){
-        Robot.intake.setIntakeLift(-Constants.INTAKE_LIFT_SPEED);
-        delay(2);
-        Robot.intake.setIntakeLift(0);
     }
     
     public static void timerDrive(double power, double time) {

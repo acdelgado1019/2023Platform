@@ -46,10 +46,10 @@ public class Intake extends SubsystemBase{
         Constants.m_IntakeLiftReduction,
         SingleJointedArmSim.estimateMOI(Constants.m_IntakeLiftLength, Constants.m_IntakeLiftMass),
         Constants.m_IntakeLiftLength,
-        Units.degreesToRadians(0),
-        Units.degreesToRadians(80),
+        Units.degreesToRadians(-90),
+        Units.degreesToRadians(90),
         Constants.m_IntakeLiftMass,
-        false,
+        true,
         null
     );
 

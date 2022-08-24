@@ -13,13 +13,10 @@ public class ShooterTOCom extends CommandBase{
     @Override
     public void execute(){
         boolean controller1_buttonA = Robot.controller1.getButton(Constants.BUTTON_A);
-        boolean controller0_buttonA = Robot.controller0.getButton(Constants.BUTTON_A);
         boolean controller1_buttonX = Robot.controller1.getButton(Constants.BUTTON_X);
         boolean controller1_buttonY = Robot.controller1.getButton(Constants.BUTTON_Y);
 
-        if(controller0_buttonA == true){
-            Robot.shooter.setShooterMotor(Robot.shooter.shooterSpeedAdjust(Robot.limelight.getDistance()));
-        }else if(controller1_buttonA == true){
+        if(controller1_buttonA == true){
             Robot.shooter.setShooterMotor(Constants.SHOOTER_LOW_SPEED);
         }else if(controller1_buttonY == true){
             Robot.shooter.setShooterMotor(Constants.SHOOTER_HI_SPEED);
