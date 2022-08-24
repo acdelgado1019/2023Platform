@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     Constants.RIGHT_DRIVE_TRAIN_1
   );
   
-  public static final Intake shooterIntake = new Intake(
+  public static final Intake intake = new Intake(
     Constants.HORIZONTAL_INTAKE,
     Constants.TRIGGER,
     Constants.INTAKE_LIFT
@@ -67,9 +67,9 @@ public class Robot extends TimedRobot {
 
   //Auto Commands
   public static String autoSequence;
-  public static String prevAuto = "";
   public static String team;
   public static int path = 0;
+  public static String prevAuto = "";
   public static String prevTeam;
   public static int prevPath = 0;
   private final String oneBall = "One Ball Auto";
@@ -110,7 +110,6 @@ public class Robot extends TimedRobot {
     // Put the choosers on the dashboard
     SmartDashboard.putData(m_chooser);
     SmartDashboard.putData(t_chooser);
-    SmartDashboard.putString("Auto Step", "NOT STARTED");
 
     AutoMethods.getConstraint();
     AutoMethods.getTrajectoryConfig();
@@ -129,8 +128,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Right Rotator Sim", climbers.R_mech2d);
     climbers.R_RotatorTower.setColor(new Color8Bit(Color.kDarkGray));
 
-    SmartDashboard.putData("Intake Lift Sim", shooterIntake.intake_mech2d);
-    shooterIntake.intakeTower.setColor(new Color8Bit(Color.kFirstRed));
+    SmartDashboard.putData("Intake Lift Sim", intake.intake_mech2d);
+    intake.intakeTower.setColor(new Color8Bit(Color.kFirstRed));
   }
 
   /**
@@ -151,7 +150,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     Constants.teamColor = DriverStation.getAlliance().toString();
     climbers.resetEncoders();
-    shooterIntake.resetEncoder();
+    intake.resetEncoder();
     ledStrip.stripeRB();
     preMoveMode = true;
     moveMode = false;
@@ -234,7 +233,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    shooterIntake.setIntakeLift(0.0);
+    intake.setIntakeLift(0.0);
     climbers.setLeftClimberRotation(0.0);
     climbers.setRightClimberRotation(0.0);
   }
@@ -268,7 +267,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     climbers.resetEncoders();
-    shooterIntake.resetEncoder();
+    intake.resetEncoder();
   }
 
   /** This function is called periodically during test mode. */
