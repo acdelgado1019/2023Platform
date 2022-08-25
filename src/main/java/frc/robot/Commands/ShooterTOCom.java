@@ -16,15 +16,16 @@ public class ShooterTOCom extends CommandBase{
         boolean controller1_buttonX = Robot.controller1.getButton(Constants.BUTTON_X);
         boolean controller1_buttonY = Robot.controller1.getButton(Constants.BUTTON_Y);
 
-        if(controller1_buttonA == true){
-            Robot.shooter.setShooterMotor(Constants.SHOOTER_LOW_SPEED);
-        }else if(controller1_buttonY == true){
-            Robot.shooter.setShooterMotor(Constants.SHOOTER_HI_SPEED);
-        }else if(controller1_buttonX == true){
-            Robot.shooter.setShooterMotor(Constants.SHOOTER_MID_SPEED);
-        }else if(!Robot.climbers.getClimbMode()){
-            Robot.shooter.setShooterMotor(Robot.shooter.shooterSpeedAdjust(Robot.limelight.getDistance()));
-        }else {Robot.shooter.setShooterMotor(0);}
+        Robot.shooter.setShooterMotor(
+            controller1_buttonA ? Constants.SHOOTER_LOW_SPEED : 
+                (controller1_buttonY ? Constants.SHOOTER_HI_SPEED :
+                    (controller1_buttonX ? Constants.SHOOTER_MID_SPEED :
+                        (!Robot.climbers.getClimbMode() ? Robot.shooter.shooterSpeedAdjust(Robot.limelight.getDistance()) : 0
+                    )
+                )
+            )
+        );
+
         Robot.shooter.updateDashboard();
     }
 }

@@ -44,21 +44,6 @@ public class AutoMethods {
     public static void runIntake(double speed){
         Robot.intake.setHorizontalIntake(speed);
     }
-    
-    public static void timerDrive(double power, double time) {
-        Robot.drivetrain.setRightDrivetrain(power);
-        Robot.drivetrain.setLeftDrivetrain(power);
-        delay(time);
-        Robot.drivetrain.setRightDrivetrain(0);
-        Robot.drivetrain.setLeftDrivetrain(0);
-    }
-
-    public static void delay(double delayTime){
-        double timeStart = Timer.getFPGATimestamp();
-        while (Timer.getFPGATimestamp() - timeStart < delayTime){
-            Robot.drivetrain.m_drive.feed();
-        }
-    }
 
     // Create a voltage constraint to ensure we don't accelerate too fast
     public static DifferentialDriveVoltageConstraint getConstraint(){

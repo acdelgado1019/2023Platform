@@ -32,9 +32,12 @@ public class ClimbersTOCom extends CommandBase{
             Robot.climbers.setLeftClimber(-1);
             Robot.climbers.setRightClimber(-1);
             Robot.climbers.setClimberRotation(Units.degreesToRadians(Constants.RotatorUnhookPositionDeg));
-        } else {
+        } else if (Robot.climbers.getClimbMode()){
             Robot.climbers.setLeftClimber(controller1_leftJoystickY);
             Robot.climbers.setRightClimber(controller1_rightJoystickY);
+        } else {
+            Robot.climbers.setLeftClimber(0);
+            Robot.climbers.setRightClimber(0);
         }
 
         if (Robot.climbers.getClimbMode()){Robot.ledStrip.rainbow();}

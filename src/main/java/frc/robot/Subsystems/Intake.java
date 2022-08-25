@@ -105,8 +105,11 @@ public class Intake extends SubsystemBase{
         }
     }
 
-    public void setIntakeLift(double voltage){
-        intakeLift.setVoltage(voltage);
+    public void setIntakeLift(double setpoint){
+        var pidOutput = Robot.intake.Lift_controller.calculate(
+            Robot.intake.getEncoder(), 
+            Units.degreesToRadians(setpoint));
+        intakeLift.setVoltage(pidOutput);
     }
 
     //Pulses the trigger in half-second increments to allow for flywheel recovery
