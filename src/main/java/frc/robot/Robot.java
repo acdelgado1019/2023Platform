@@ -20,6 +20,7 @@ import frc.robot.Subsystems.Climbers;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Limelight;
 import frc.robot.Subsystems.Shooter;
+import frc.robot.Subsystems.Climbers.AutoClimbStep;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.LEDs;
 
@@ -145,6 +146,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("Intake Lift Sim", intake.intake_mech2d);
     intake.intakeTower.setColor(new Color8Bit(Color.kFirstRed));
+
+    climbers.autoClimbStep = AutoClimbStep.MANUAL_MODE;
   }
 
   /**
@@ -168,7 +171,6 @@ public class Robot extends TimedRobot {
     intake.resetEncoder();
     ledStrip.stripeRB();
     autoSection = AutoSection.STARTUP;
-    timeCheck = Timer.getFPGATimestamp();
   }
 
   /** This function is called periodically during autonomous. */
@@ -182,38 +184,38 @@ public class Robot extends TimedRobot {
       Robot.shooter.setShooterMotor(Robot.shooter.shooterSpeedAdjust(Robot.limelight.getDistance()));
       if(Timer.getFPGATimestamp() - timeCheck > 1.5){autoSection = AutoSection.OPENING_ACTION;}      
     } else if (autoSection == AutoSection.OPENING_ACTION){
-      if (desiredMode == DesiredMode.ONE_BALL_RED || desiredMode == DesiredMode.ONE_BALL_BLUE || 
-          desiredMode == DesiredMode.BACK_UP_RED || desiredMode == DesiredMode.BACK_UP_BLUE){
+      if (desiredMode == DesiredMode.BACK_UP_RED || desiredMode == DesiredMode.BACK_UP_BLUE ||
+          desiredMode == DesiredMode.ONE_BALL_RED || desiredMode == DesiredMode.ONE_BALL_BLUE){
         AutoMethods.limelightShoot();
       } else if (desiredMode == DesiredMode.TWO_BALL_RED || desiredMode == DesiredMode.TWO_BALL_BLUE){
-        AutoMethods.runIntake(Constants.HORIZONTAL_INTAKE_SPEED);
+        Robot.intake.setHorizontalIntake(Constants.HORIZONTAL_INTAKE_SPEED);
       } else if (desiredMode == DesiredMode.THREE_BALL_RED || desiredMode == DesiredMode.THREE_BALL_BLUE) {
         AutoMethods.limelightShoot();
-        AutoMethods.runIntake(Constants.HORIZONTAL_INTAKE_SPEED);
+        Robot.intake.setHorizontalIntake(Constants.HORIZONTAL_INTAKE_SPEED);
       }
       autoSection = AutoSection.MOVEMENT;
-    } else if (autoSection == AutoSection.MOVEMENT){
       ledStrip.stripeRB();
-      AutoMethods.runRamsete().schedule();
-      autoSection = AutoSection.CLOSING_ACTION;
-      timeCheck = Timer.getFPGATimestamp();
+    } else if (autoSection == AutoSection.MOVEMENT){
+        AutoMethods.runRamsete().schedule();
+        autoSection = AutoSection.CLOSING_ACTION;
+        timeCheck = Timer.getFPGATimestamp();
     } else if (autoSection == AutoSection.CLOSING_ACTION){
       if (desiredMode == DesiredMode.BACK_UP_RED || desiredMode == DesiredMode.BACK_UP_BLUE){
         autoSection = AutoSection.FINISH;
       } else if (desiredMode == DesiredMode.ONE_BALL_RED || desiredMode == DesiredMode.ONE_BALL_BLUE){
         if(Timer.getFPGATimestamp() - timeCheck > 3.5){
-          AutoMethods.runIntake(-Constants.HORIZONTAL_INTAKE_SPEED);
+          Robot.intake.setHorizontalIntake(-Constants.HORIZONTAL_INTAKE_SPEED);
           autoSection = AutoSection.FINISH;
         }
       } else if (desiredMode == DesiredMode.TWO_BALL_RED || desiredMode == DesiredMode.TWO_BALL_BLUE){
         if(Timer.getFPGATimestamp() - timeCheck > 3){
-          AutoMethods.runIntake(0);
+          Robot.intake.setHorizontalIntake(0);
           AutoMethods.limelightShoot();
           autoSection = AutoSection.FINISH;
         }
       } else if (desiredMode == DesiredMode.THREE_BALL_RED || desiredMode == DesiredMode.THREE_BALL_BLUE) {
         if(Timer.getFPGATimestamp() - timeCheck > 4){
-          AutoMethods.runIntake(0);
+          Robot.intake.setHorizontalIntake(0);
           AutoMethods.limelightShoot();
           autoSection = AutoSection.FINISH;
         }
