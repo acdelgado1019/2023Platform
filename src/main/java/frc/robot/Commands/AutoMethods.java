@@ -25,13 +25,9 @@ public class AutoMethods {
 
     public static void limelightShoot()
     {
-        double degOff = Robot.limelight.getTX();
-        while(Math.abs(degOff) > 1 && Robot.limelight.getTV() != 0)
+        while(Robot.limelight.getTV() != 0 && Math.abs(Robot.limelight.getTX()) > 3)
         {
-            double speed = .15 * degOff/(Math.abs(degOff));
-            Robot.drivetrain.setLeftDrivetrain(-speed);
-            Robot.drivetrain.setRightDrivetrain(speed);
-            degOff = Robot.limelight.getTX();
+            Robot.drivetrain.hubTrack();
         }
         Robot.drivetrain.setLeftDrivetrain(0);
         Robot.drivetrain.setRightDrivetrain(0);
@@ -39,10 +35,6 @@ public class AutoMethods {
         Robot.ledStrip.solid(60);
         Timer.delay(1);
         Robot.intake.setTrigger(0);
-    }
-
-    public static void runIntake(double speed){
-        Robot.intake.setHorizontalIntake(speed);
     }
 
     // Create a voltage constraint to ensure we don't accelerate too fast

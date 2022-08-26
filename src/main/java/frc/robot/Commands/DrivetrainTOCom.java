@@ -26,7 +26,7 @@ public class DrivetrainTOCom extends CommandBase{
         rightMotorSet = ((controller0_leftStickY + (Constants.LEFT_RIGHT_TRIM + (controller0_rightStickX * Constants.MAX_TURN_SPEED))) * Constants.MAX_DRIVE_SPEED);
 
         //Set motors
-        if(controller0_buttonA){Robot.drivetrain.limelightTrack();
+        if(controller0_buttonA){Robot.drivetrain.hubTrack();
         } else {
             Robot.drivetrain.setLeftDrivetrain(leftMotorSet);
             Robot.drivetrain.setRightDrivetrain(rightMotorSet);

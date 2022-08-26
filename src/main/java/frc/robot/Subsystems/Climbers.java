@@ -1,7 +1,5 @@
 package frc.robot.Subsystems;
 
-import java.util.HashMap;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -35,6 +33,20 @@ public class Climbers extends SubsystemBase{
     public final PIDController L_controller = new PIDController(Constants.kLRotatorKp, 0, 0);
     public final PIDController R_controller = new PIDController(Constants.kRRotatorKp, 0, 0);
 
+    public enum AutoClimbStep{
+        MANUAL_MODE,
+        MID_BAR_RETRACT,
+        MID_BAR_RELEASE,
+        HIGH_BAR_EXTEND,
+        HIGH_BAR_RETRACT,
+        HIGH_BAR_RELEASE,
+        TRAVERSAL_BAR_EXTEND,
+        TRAVERSAL_BAR_RETRACT,
+        CLIMB_COMPLETE
+    }
+
+    public AutoClimbStep autoClimbStep;
+
     private static final DCMotor m_LGearBox = DCMotor.getNEO(1);
     private static final DCMotor m_RGearBox = DCMotor.getNEO(1);
     private final SingleJointedArmSim leftClimberRotate_Sim =
@@ -46,7 +58,7 @@ public class Climbers extends SubsystemBase{
         Units.degreesToRadians(64),
         Units.degreesToRadians(90),
         Constants.m_RotatorMass,
-        false,
+        true,
         null
     );
     private final SingleJointedArmSim rightClimberRotate_Sim =
@@ -58,7 +70,7 @@ public class Climbers extends SubsystemBase{
         Units.degreesToRadians(90),
         Units.degreesToRadians(116),
         Constants.m_RotatorMass,
-        false,
+        true,
         null
     );
 
@@ -125,15 +137,6 @@ public class Climbers extends SubsystemBase{
         L_Rotator.setAngle(Units.radiansToDegrees(leftClimberRotate_Sim.getAngleRads()));
     }
 
-    public HashMap<String, Double> getEncoderValues() {
-        HashMap<String, Double> encoderMap =  new HashMap<String, Double>();
-        encoderMap.put("leftClimberEncoder", climberEncoderLeft.getDistance());
-        encoderMap.put("rightClimberEncoder", climberEncoderRight.getDistance());
-        encoderMap.put("leftRotationEncoder", -leftRotateEncoder.getDistance());
-        encoderMap.put("rightRotationEncoder", rightRotateEncoder.getDistance());
-        return encoderMap;
-    }
-
     public void setLeftClimber(double speed){
         leftClimber0.set(-speed);
         leftClimber1.set(-speed);
@@ -145,11 +148,10 @@ public class Climbers extends SubsystemBase{
     }
 
     public void setClimberRotation(double setpoint){
-        var lPIDOutput = L_controller.calculate(getLeftEncoder(), Units.degreesToRadians(90.0)-(setpoint-Units.degreesToRadians(90.0)));
+        var lPIDOutput = L_controller.calculate(getLeftRotEncoder(), Units.degreesToRadians(90.0)-(setpoint-Units.degreesToRadians(90.0)));
         setLeftClimberRotation(lPIDOutput);
-        var rPIDOutput = R_controller.calculate(getRightEncoder(), setpoint);
+        var rPIDOutput = R_controller.calculate(getRightRotEncoder(), setpoint);
         setRightClimberRotation(rPIDOutput);
-        SmartDashboard.putNumber("SetPoint", Units.degreesToRadians(90.0)-(setpoint-Units.degreesToRadians(90.0)));
     }
 
     public void setLeftClimberRotation(double voltage)
@@ -183,18 +185,25 @@ public class Climbers extends SubsystemBase{
 
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Right Climber Position ", climberEncoderRight.getDistance());
-        SmartDashboard.putNumber("Left Climber Position ", climberEncoderLeft.getDistance());
-        SmartDashboard.putNumber("Left Rotator Position ", -Units.radiansToDegrees(leftRotateEncoder.getDistance()));
-        SmartDashboard.putNumber("Right Rotator Position ", Units.radiansToDegrees(rightRotateEncoder.getDistance()));
-        SmartDashboard.putBoolean("Climb Mode", climbMode);
+        SmartDashboard.putNumber("Right Climber Position ", getRightClimbEncoder()/8);
+        SmartDashboard.putNumber("Left Climber Position ", getLeftClimbEncoder()/8);
+        SmartDashboard.putNumber("Right Rotator Position ", Units.radiansToDegrees(getRightRotEncoder())-84);
+        SmartDashboard.putNumber("Left Rotator Position ", 84-Units.radiansToDegrees(getLeftRotEncoder()));
     }
 
-    public double getRightEncoder(){
+    public double getRightClimbEncoder(){
+        return climberEncoderRight.getDistance();
+    }
+
+    public double getLeftClimbEncoder(){
+        return climberEncoderLeft.getDistance();
+    }
+    
+    public double getRightRotEncoder(){
         return rightRotateEncoder.getDistance();
     }
 
-    public double getLeftEncoder(){
+    public double getLeftRotEncoder(){
         return leftRotateEncoder.getDistance();
     }
 

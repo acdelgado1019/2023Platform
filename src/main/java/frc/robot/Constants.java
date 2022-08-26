@@ -85,6 +85,7 @@ public class Constants {
         public static final double kvVoltSecondsPerMeter = 0.34464;
         public static final double kaVoltSecondsSquaredPerMeter = 0.2;
         public static final double kPDriveVel = 3.9966;
+        public static final double kPDriveRot = 0.0025;
         public static final double kTrackwidthMeters = Units.inchesToMeters(19.25);
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -104,13 +105,14 @@ public class Constants {
         public static final double kClimberEncoderDistPerPulse = 2.0 * Math.PI / 8;
 
         // The P gain for the PID controller that drives this Rotator.
-        public static double kLRotatorKp = 10;
+        public static double kLRotatorKp = 50;
 
         // The P gain for the PID controller that drives this Rotator.
-        public static double kRRotatorKp = 10;
+        public static double kRRotatorKp = 50;
 
-        public static double RotatorFullPositionDeg = 116.0;
-        public static double RotatorUnhookPositionDeg = 93.0;
+        public static double RotatorFullPositionDeg = Units.degreesToRadians(116.0);
+        public static double RotatorUnhookPositionDeg = Units.degreesToRadians(93.0);
+        public static double RotatorVerticalPositionDeg = Units.degreesToRadians(90.0);
 
     //Intake Lift Constants
         public static final double m_IntakeLiftReduction = 125;

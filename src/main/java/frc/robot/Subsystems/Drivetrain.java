@@ -3,6 +3,7 @@ package frc.robot.Subsystems;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Commands.DrivetrainTOCom;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -45,6 +46,7 @@ public class Drivetrain extends SubsystemBase{
 
     public DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.kTrackwidthMeters);
     public DifferentialDriveOdometry odometry;
+    private PIDController Rot_controller = new PIDController(Constants.kPDriveRot, 0, 0);
 
     public double initPose = 0.0;
 
@@ -186,23 +188,31 @@ public class Drivetrain extends SubsystemBase{
         m_drive.feed();
     }
 
-        //Adjusts the pose of the robot to center on the hub
-        public void limelightTrack()
-        {
-            double degOff = 0.0;
-            
-            if(Robot.limelight.getTV() != 0){
-                degOff = Robot.limelight.getTX();
-            } else {
-                degOff = getNormHeading() - Robot.limelight.getOffset();
-                if (degOff>180){degOff = -360+degOff;}
-                else if (degOff<-180){degOff = 360+degOff;}
-            }
-            if(Math.abs(degOff) > 1){
-                    double speed = .15 * degOff/90;
-                    setLeftDrivetrain(speed);
-                    setRightDrivetrain(speed);
-            }
+    //Adjusts the pose of the robot to center on the hub
+    public void hubTrack()
+    {
+        double degOff = 0.0;
+        
+        if(Robot.limelight.getTV() != 0){
+            degOff = Robot.limelight.getTX();
+        } else {
+            degOff = getNormHeading() - Robot.limelight.getOffset();
+            if (degOff>180){degOff = -360+degOff;}
+            else if (degOff<-180){degOff = 360+degOff;}
         }
+        if(Math.abs(degOff) > 1){
+                double speed = .15 * degOff/90;
+                setLeftDrivetrain(speed);
+                setRightDrivetrain(speed);
+        }
+    }
+
+    //Snaps Robot to a particular angle
+    public void snapToAngle(double angle){
+        double pidOutput = Rot_controller.calculate(getNormHeading(), angle);
+        SmartDashboard.putNumber("PID Rotation", pidOutput);
+        setLeftDrivetrain(-pidOutput);
+        setRightDrivetrain(-pidOutput);
+    }
 
 }
