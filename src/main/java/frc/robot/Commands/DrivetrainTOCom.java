@@ -31,7 +31,6 @@ public class DrivetrainTOCom extends CommandBase{
             Robot.drivetrain.setLeftDrivetrain(leftMotorSet);
             Robot.drivetrain.setRightDrivetrain(rightMotorSet);
         }
-        SmartDashboard.putNumber("Heading", Robot.drivetrain.getNormHeading());
-        SmartDashboard.putNumber("Offset", Robot.limelight.getOffset());
+        SmartDashboard.putData("Gyro", Robot.drivetrain.m_gyro);
     }
 }
