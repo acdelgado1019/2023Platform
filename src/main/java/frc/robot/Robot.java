@@ -7,14 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Commands.Autonomous.AutoMethods;
 import frc.robot.Commands.Autonomous.AutoRoutine;
 import frc.robot.Subsystems.Climbers;
 import frc.robot.Subsystems.Drivetrain;
@@ -67,18 +63,6 @@ public class Robot extends TimedRobot {
   public static final Controller controller0 = new Controller(Constants.DRIVER_CONTROLLER_0);
   public static final Controller controller1 = new Controller(Constants.DRIVER_CONTROLLER_1);
 
-  //Auto Commands
-  public static enum DesiredMode {
-    BACK_UP_BLUE,
-    BACK_UP_RED, 
-    ONE_BALL_RED,
-    ONE_BALL_BLUE,
-    TWO_BALL_RED,
-    TWO_BALL_BLUE,
-    THREE_BALL_RED,
-    THREE_BALL_BLUE,
-  }
-
   public enum AutoSection {
     STARTUP,
     OPENING_ACTION,
@@ -87,17 +71,9 @@ public class Robot extends TimedRobot {
     EXIT_AUTO
   }
 
-  public static DesiredMode desiredMode;
-  public static DesiredMode prevMode;
   public static AutoSection autoSection;
   public static String prevAuto = "";
   public double timeCheck;
-  
-  public static SendableChooser<DesiredMode> m_chooser = new SendableChooser<>();
-
-  //Field display to Shuffleboard
-  public static Field2d m_field;
-  public static Field2d logo;
 
   //Test Timer & Flag
   Timer timer = new Timer();
@@ -108,27 +84,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("One Ball Red", DesiredMode.ONE_BALL_RED);
-    m_chooser.addOption("Two Ball Red", DesiredMode.TWO_BALL_RED);
-    m_chooser.addOption("Three Ball Red", DesiredMode.THREE_BALL_RED);
-    m_chooser.addOption("Back Up Red", DesiredMode.BACK_UP_RED);
-    m_chooser.addOption("One Ball Blue", DesiredMode.ONE_BALL_BLUE);
-    m_chooser.addOption("Two Ball Blue", DesiredMode.TWO_BALL_BLUE);
-    m_chooser.addOption("Three Ball Blue", DesiredMode.THREE_BALL_BLUE);
-    m_chooser.addOption("Back Up Blue", DesiredMode.BACK_UP_BLUE);
-
-    // Put the choosers on the dashboard
-    SmartDashboard.putData(m_chooser);
-
-    AutoMethods.getConstraint();
-    AutoMethods.getTrajectoryConfig();
-      
-    // Create and push Field2d to SmartDashboard.
-    m_field = new Field2d();
-
-    SmartDashboard.putData(m_field);
-    LiveWindow.disableAllTelemetry();
-    LiveWindow.enableTelemetry(drivetrain.m_gyro);
+    HDD.initBot();
 
     // Put Mechanism 2d to SmartDashboard
     SmartDashboard.putData("Left Rotator Sim", climbers.L_mech2d);
@@ -153,7 +109,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    m_field.setRobotPose(drivetrain.odometry.getPoseMeters());
+    HDD.m_field.setRobotPose(drivetrain.odometry.getPoseMeters());
     drivetrain.m_drive.feed();
   }
 
@@ -164,7 +120,7 @@ public class Robot extends TimedRobot {
     intake.resetEncoder();
     ledStrip.stripeRB();
     autoSection = AutoSection.STARTUP;
-    AutoRoutine.timeCheck = Timer.getFPGATimestamp();;
+    AutoRoutine.timeCheck = Timer.getFPGATimestamp();
   }
 
   /** This function is called periodically during autonomous. */
@@ -195,15 +151,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-    desiredMode = m_chooser.getSelected();
-    
-    if (prevMode!=desiredMode){
-      AutoMethods.getTrajectory();
-      m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
-      AutoMethods.resetOdometry(AutoMethods.trajectory);
-      prevMode = desiredMode;
-    }
-
+    HDD.updateStartupConfig();
     ledStrip.mardiGras();
   }
 
