@@ -3,9 +3,10 @@ package frc.robot.Commands.Autonomous;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants;
+import frc.robot.HDD;
 import frc.robot.Robot;
 import frc.robot.Robot.AutoSection;
-import frc.robot.Robot.DesiredMode;
+import frc.robot.HDD.DesiredMode;
 
 public class AutoRoutine {
 
@@ -22,12 +23,12 @@ public class AutoRoutine {
                 if(Timer.getFPGATimestamp() - timeCheck > 1.5){Robot.autoSection = AutoSection.OPENING_ACTION;} 
                 break;     
             case OPENING_ACTION :
-                if (Robot.desiredMode == DesiredMode.BACK_UP_RED || Robot.desiredMode == DesiredMode.BACK_UP_BLUE ||
-                    Robot.desiredMode == DesiredMode.ONE_BALL_RED || Robot.desiredMode == DesiredMode.ONE_BALL_BLUE){
+                if (HDD.desiredMode == DesiredMode.BACK_UP ||
+                HDD.desiredMode == DesiredMode.ONE_BALL_RED || HDD.desiredMode == DesiredMode.ONE_BALL_BLUE){
                     AutoMethods.limelightShoot();
-                } else if (Robot.desiredMode == DesiredMode.TWO_BALL_RED || Robot.desiredMode == DesiredMode.TWO_BALL_BLUE){
+                } else if (HDD.desiredMode == DesiredMode.TWO_BALL_RED || HDD.desiredMode == DesiredMode.TWO_BALL_BLUE){
                     Robot.intake.setHorizontalIntake(Constants.HORIZONTAL_INTAKE_SPEED);
-                } else if (Robot.desiredMode == DesiredMode.THREE_BALL_RED || Robot.desiredMode == DesiredMode.THREE_BALL_BLUE) {
+                } else if (HDD.desiredMode == DesiredMode.THREE_BALL_RED || HDD.desiredMode == DesiredMode.THREE_BALL_BLUE) {
                     AutoMethods.limelightShoot();
                     Robot.intake.setHorizontalIntake(Constants.HORIZONTAL_INTAKE_SPEED);
                 }
@@ -38,20 +39,20 @@ public class AutoRoutine {
                 break;
             case CLOSING_ACTION :
             
-                if (Robot.desiredMode == DesiredMode.BACK_UP_RED || Robot.desiredMode == DesiredMode.BACK_UP_BLUE){
+                if (HDD.desiredMode == DesiredMode.BACK_UP){
                     Robot.autoSection = AutoSection.FINISH;
-                } else if (Robot.desiredMode == DesiredMode.ONE_BALL_RED || Robot.desiredMode == DesiredMode.ONE_BALL_BLUE){
+                } else if (HDD.desiredMode == DesiredMode.ONE_BALL_RED || HDD.desiredMode == DesiredMode.ONE_BALL_BLUE){
                     if(Timer.getFPGATimestamp() - timeCheck > 3.5){
                         Robot.intake.setHorizontalIntake(-Constants.HORIZONTAL_INTAKE_SPEED);
                         Robot.autoSection = AutoSection.FINISH;
                     }
-                } else if (Robot.desiredMode == DesiredMode.TWO_BALL_RED || Robot.desiredMode == DesiredMode.TWO_BALL_BLUE){
+                } else if (HDD.desiredMode == DesiredMode.TWO_BALL_RED || HDD.desiredMode == DesiredMode.TWO_BALL_BLUE){
                     if(Timer.getFPGATimestamp() - timeCheck > 3){
                         Robot.intake.setHorizontalIntake(0);
                         AutoMethods.limelightShoot();
                         Robot.autoSection = AutoSection.FINISH;
                     }
-                } else if (Robot.desiredMode == DesiredMode.THREE_BALL_RED || Robot.desiredMode == DesiredMode.THREE_BALL_BLUE) {
+                } else if (HDD.desiredMode == DesiredMode.THREE_BALL_RED || HDD.desiredMode == DesiredMode.THREE_BALL_BLUE) {
                     if(Timer.getFPGATimestamp() - timeCheck > 5){
                         Robot.intake.setHorizontalIntake(0);
                         AutoMethods.limelightShoot();
