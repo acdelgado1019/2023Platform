@@ -2,6 +2,7 @@ package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.PlayerConfigs;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Climbers.AutoClimbStep;
 
@@ -12,45 +13,34 @@ public class ClimbersTOCom extends CommandBase{
     }
 
     @Override
-    public void execute(){    
-        double controller1_leftJoystickY = Robot.controller1.getJoystickAxis(Constants.LEFT_STICK_Y);
-        double controller1_rightJoystickY = Robot.controller1.getJoystickAxis(Constants.RIGHT_STICK_Y);
-        boolean controller1_leftJoystickButton = Robot.controller1.getButton(Constants.LEFT_JOYSTICK_BUTTON);
-        boolean controller1_rightJoystickButton = Robot.controller1.getButton(Constants.RIGHT_JOYSTICK_BUTTON);
+    public void execute(){   
+        int val = (int)Math.max(Math.min(Robot.climbers.getLeftClimbEncoder() * 8,255.0),0.0);
 
-        boolean controller1_rightTrigger = Robot.controller1.getButton(Constants.RIGHT_TRIGGER);
-        boolean controller1_rightBumper = Robot.controller1.getButton(Constants.RIGHT_BUMPER);
 
-        boolean controller1_buttonB = Robot.controller1.getButton(Constants.BUTTON_B);
-
-        boolean controller1_BACK = Robot.controller1.getButton(Constants.BUTTON_BACK);
-
-        int val = (int)Math.max(Math.min(Robot.climbers.getLeftClimbEncoder(),255.0),0.0);
-
-        if(controller1_BACK){
+        if(PlayerConfigs.climbModeReset){
             Robot.climbers.resetClimbMode();
             Robot.climbers.autoClimbStep = AutoClimbStep.MANUAL_MODE;
         }
 
-        if(controller1_leftJoystickButton && controller1_rightJoystickButton){
+        if(PlayerConfigs.autoClimbTriggerA && PlayerConfigs.autoClimbTriggerB){
             Robot.climbers.autoClimbStep = AutoClimbStep.MID_BAR_RETRACT;
         }
 
         switch (Robot.climbers.autoClimbStep){
             case MANUAL_MODE :
-                if(controller1_rightTrigger){
+                if(PlayerConfigs.climberExtend){
                     Robot.climbers.setClimbMode();
                     Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
                     Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
                     Robot.ledStrip.rainbow();
-                } else if (controller1_rightBumper) {
+                } else if (PlayerConfigs.climberRetract) {
                     Robot.climbers.setClimbMode();
                     Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
                     Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
                     Robot.ledStrip.rainbow();
                 } else if (Robot.climbers.getClimbMode()){
-                    Robot.climbers.setLeftClimber(controller1_leftJoystickY);
-                    Robot.climbers.setRightClimber(controller1_rightJoystickY);
+                    Robot.climbers.setLeftClimber(PlayerConfigs.climberLeftExtension);
+                    Robot.climbers.setRightClimber(PlayerConfigs.climberRightExtension);
                     Robot.ledStrip.rainbow();
                 } else {
                     Robot.climbers.setLeftClimber(0);
@@ -58,9 +48,9 @@ public class ClimbersTOCom extends CommandBase{
                 }
             
 
-                if (controller1_buttonB){
+                if (PlayerConfigs.climberRotate){
                     Robot.climbers.setClimberRotation(Constants.RotatorFullPositionDeg);
-                } else if(!controller1_rightBumper){
+                } else if(!PlayerConfigs.climberRetract){
                     Robot.climbers.setClimberRotation(Constants.RotatorVerticalPositionDeg);
                 }
                 break;
@@ -78,7 +68,7 @@ public class ClimbersTOCom extends CommandBase{
                 Robot.climbers.setClimberRotation(Constants.RotatorUnhookPositionDeg);
                 Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
                 Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() > 100 && Robot.climbers.getRightClimbEncoder() > 100){
+                if (Robot.climbers.getLeftClimbEncoder() > 10 && Robot.climbers.getRightClimbEncoder() > 10){
                     Robot.climbers.autoClimbStep = AutoClimbStep.HIGH_BAR_EXTEND;
                 }
                 break;
@@ -87,7 +77,7 @@ public class ClimbersTOCom extends CommandBase{
                 Robot.climbers.setClimberRotation(Constants.RotatorFullPositionDeg);
                 Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
                 Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() > 272 && Robot.climbers.getRightClimbEncoder() > 272){
+                if (Robot.climbers.getLeftClimbEncoder() > 34 && Robot.climbers.getRightClimbEncoder() > 34){
                     Robot.climbers.autoClimbStep = AutoClimbStep.HIGH_BAR_RETRACT;
                 }
                 break;
@@ -96,7 +86,7 @@ public class ClimbersTOCom extends CommandBase{
                 Robot.climbers.setClimberRotation(Constants.RotatorVerticalPositionDeg);
                 Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
                 Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() < 3 && Robot.climbers.getRightClimbEncoder() < 3){
+                if (Robot.climbers.getLeftClimbEncoder() < 0.2 && Robot.climbers.getRightClimbEncoder() < 0.2){
                     Robot.climbers.autoClimbStep = AutoClimbStep.HIGH_BAR_RELEASE;
                 }
                 break;
@@ -105,7 +95,7 @@ public class ClimbersTOCom extends CommandBase{
                 Robot.climbers.setClimberRotation(Constants.RotatorUnhookPositionDeg);
                 Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
                 Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() > 100 && Robot.climbers.getRightClimbEncoder() > 100){
+                if (Robot.climbers.getLeftClimbEncoder() > 10 && Robot.climbers.getRightClimbEncoder() > 10){
                     Robot.climbers.autoClimbStep = AutoClimbStep.TRAVERSAL_BAR_EXTEND;
                 }
                 break;
@@ -114,7 +104,7 @@ public class ClimbersTOCom extends CommandBase{
                 Robot.climbers.setClimberRotation(Constants.RotatorFullPositionDeg);
                 Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
                 Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() > 272 && Robot.climbers.getRightClimbEncoder() > 272){
+                if (Robot.climbers.getLeftClimbEncoder() > 34 && Robot.climbers.getRightClimbEncoder() > 34){
                     Robot.climbers.autoClimbStep = AutoClimbStep.TRAVERSAL_BAR_RETRACT;
                 }
                 break;
@@ -123,7 +113,7 @@ public class ClimbersTOCom extends CommandBase{
                 Robot.climbers.setClimberRotation(Constants.RotatorVerticalPositionDeg);
                 Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
                 Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() < 3 && Robot.climbers.getRightClimbEncoder() < 3){
+                if (Robot.climbers.getLeftClimbEncoder() < 0.2 && Robot.climbers.getRightClimbEncoder() < 0.2){
                     Robot.climbers.autoClimbStep = AutoClimbStep.CLIMB_COMPLETE;
                 }
                 break;

@@ -38,7 +38,6 @@ public class AutoRoutine {
                 timeCheck = Timer.getFPGATimestamp();
                 break;
             case CLOSING_ACTION :
-            
                 if (HDD.desiredMode == DesiredMode.BACK_UP){
                     Robot.autoSection = AutoSection.FINISH;
                 } else if (HDD.desiredMode == DesiredMode.ONE_BALL_RED || HDD.desiredMode == DesiredMode.ONE_BALL_BLUE){

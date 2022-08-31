@@ -85,6 +85,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     HDD.initBot();
+    PlayerConfigs.initTeamSetup();
 
     // Put Mechanism 2d to SmartDashboard
     SmartDashboard.putData("Left Rotator Sim", climbers.L_mech2d);
@@ -134,11 +135,15 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     autoSection = AutoSection.EXIT_AUTO;
     Constants.teamColor = DriverStation.getAlliance().toString();
+    PlayerConfigs.getPlayers();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    PlayerConfigs.getDriverConfig();
+    PlayerConfigs.getCoDriverConfig();
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
