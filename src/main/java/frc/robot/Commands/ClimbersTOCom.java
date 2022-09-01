@@ -14,7 +14,7 @@ public class ClimbersTOCom extends CommandBase{
 
     @Override
     public void execute(){   
-        int val = (int)Math.max(Math.min(Robot.climbers.getLeftClimbEncoder() * 8,255.0),0.0);
+        int val = (int)Math.max(Math.min(-Robot.climbers.getLeftClimbEncoder() * 8,255.0),0.0);
 
 
         if(PlayerConfigs.climbModeReset){
@@ -50,70 +50,72 @@ public class ClimbersTOCom extends CommandBase{
 
                 if (PlayerConfigs.climberRotate){
                     Robot.climbers.setClimberRotation(Constants.RotatorFullPositionDeg);
-                } else if(!PlayerConfigs.climberRetract){
+                } else if(PlayerConfigs.climberExtend){
+                    Robot.climbers.setClimberRotation(Constants.RotatorUnhookPositionDeg);
+                } else {
                     Robot.climbers.setClimberRotation(Constants.RotatorVerticalPositionDeg);
                 }
                 break;
             case MID_BAR_RETRACT :
                 Robot.ledStrip.varSat(255,val);
                 Robot.climbers.setClimberRotation(Constants.RotatorVerticalPositionDeg);
-                Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
-                Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() < 3 && Robot.climbers.getRightClimbEncoder() < 3){
+                Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
+                Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
+                if (Robot.climbers.getLeftClimbEncoder() > -1 && Robot.climbers.getRightClimbEncoder() > -1){
                     Robot.climbers.autoClimbStep = AutoClimbStep.MID_BAR_RELEASE;
                 }
                 break;
             case MID_BAR_RELEASE :
                 Robot.ledStrip.varSat(255,val);
                 Robot.climbers.setClimberRotation(Constants.RotatorUnhookPositionDeg);
-                Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() > 10 && Robot.climbers.getRightClimbEncoder() > 10){
+                Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
+                Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
+                if (Robot.climbers.getLeftClimbEncoder() < -10 && Robot.climbers.getRightClimbEncoder() < -10){
                     Robot.climbers.autoClimbStep = AutoClimbStep.HIGH_BAR_EXTEND;
                 }
                 break;
             case HIGH_BAR_EXTEND :
                 Robot.ledStrip.varSat(255,val);
                 Robot.climbers.setClimberRotation(Constants.RotatorFullPositionDeg);
-                Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() > 34 && Robot.climbers.getRightClimbEncoder() > 34){
+                Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
+                Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
+                if (Robot.climbers.getLeftClimbEncoder() < -34 && Robot.climbers.getRightClimbEncoder() < -34){
                     Robot.climbers.autoClimbStep = AutoClimbStep.HIGH_BAR_RETRACT;
                 }
                 break;
             case HIGH_BAR_RETRACT :
                 Robot.ledStrip.varSat(255,val);
                 Robot.climbers.setClimberRotation(Constants.RotatorVerticalPositionDeg);
-                Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
-                Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() < 0.2 && Robot.climbers.getRightClimbEncoder() < 0.2){
+                Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
+                Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
+                if (Robot.climbers.getLeftClimbEncoder() > -1 && Robot.climbers.getRightClimbEncoder() > -1){
                     Robot.climbers.autoClimbStep = AutoClimbStep.HIGH_BAR_RELEASE;
                 }
                 break;
             case HIGH_BAR_RELEASE :
                 Robot.ledStrip.varSat(255-val,val);
                 Robot.climbers.setClimberRotation(Constants.RotatorUnhookPositionDeg);
-                Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() > 10 && Robot.climbers.getRightClimbEncoder() > 10){
+                Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
+                Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
+                if (Robot.climbers.getLeftClimbEncoder() < -10 && Robot.climbers.getRightClimbEncoder() < -10){
                     Robot.climbers.autoClimbStep = AutoClimbStep.TRAVERSAL_BAR_EXTEND;
                 }
                 break;
             case TRAVERSAL_BAR_EXTEND :
                 Robot.ledStrip.varSat(255-val,val);
                 Robot.climbers.setClimberRotation(Constants.RotatorFullPositionDeg);
-                Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() > 34 && Robot.climbers.getRightClimbEncoder() > 34){
+                Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
+                Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
+                if (Robot.climbers.getLeftClimbEncoder() < -34 && Robot.climbers.getRightClimbEncoder() < -34){
                     Robot.climbers.autoClimbStep = AutoClimbStep.TRAVERSAL_BAR_RETRACT;
                 }
                 break;
             case TRAVERSAL_BAR_RETRACT :
-                Robot.ledStrip.varRainbow(255-val);
+                Robot.ledStrip.varRainbow(255-val/2);
                 Robot.climbers.setClimberRotation(Constants.RotatorVerticalPositionDeg);
-                Robot.climbers.setLeftClimber(Constants.CLIMBER_MOVEMENT_SPEED);
-                Robot.climbers.setRightClimber(Constants.CLIMBER_MOVEMENT_SPEED);
-                if (Robot.climbers.getLeftClimbEncoder() < 0.2 && Robot.climbers.getRightClimbEncoder() < 0.2){
+                Robot.climbers.setLeftClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
+                Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
+                if (Robot.climbers.getLeftClimbEncoder() > -20 && Robot.climbers.getRightClimbEncoder() > -20){
                     Robot.climbers.autoClimbStep = AutoClimbStep.CLIMB_COMPLETE;
                 }
                 break;

@@ -66,7 +66,7 @@ public class Constants {
 
     //Speed Variables
         public static final double MAX_DRIVE_SPEED = .8; // Min = 0, Max = 1
-        public static final double CLIMBER_MOVEMENT_SPEED = 0.5;
+        public static final double CLIMBER_MOVEMENT_SPEED = -0.1;
         public static final double MAX_TURN_SPEED = 0.15; // Min = 0, Max = 1;
         public static final double LEFT_RIGHT_TRIM = 0; // Min = -1, Max = 1;+
         public static final double INTAKE_LIFT_SPEED = .3;
@@ -99,17 +99,17 @@ public class Constants {
         public static final double m_RotatorMass = 5.4; // Kilograms
         public static final double m_RotatorLength = Units.inchesToMeters(42);
         public static final double kRotatorEncoderDistPerPulse = 2.0 * Math.PI / m_RotatorReduction;
-        public static final double kClimberEncoderDistPerPulse = 2.0 * Math.PI / 8;
+        public static final double kClimberEncoderDistPerPulse = 0.125 * 32/50;
 
         // The P gain for the PID controller that drives this Rotator.
-        public static double kLRotatorKp = 50;
+        public static double kLRotatorKp = 5;
 
         // The P gain for the PID controller that drives this Rotator.
-        public static double kRRotatorKp = 50;
+        public static double kRRotatorKp = 5;
 
-        public static double RotatorFullPositionDeg = Units.degreesToRadians(116.0);
-        public static double RotatorUnhookPositionDeg = Units.degreesToRadians(93.0);
-        public static double RotatorVerticalPositionDeg = Units.degreesToRadians(90.0);
+        public static double RotatorFullPositionDeg = Units.degreesToRadians(26);
+        public static double RotatorUnhookPositionDeg = Units.degreesToRadians(3);
+        public static double RotatorVerticalPositionDeg = Units.degreesToRadians(0);
 
     //Intake Lift Constants
         public static final double m_IntakeLiftReduction = 125;

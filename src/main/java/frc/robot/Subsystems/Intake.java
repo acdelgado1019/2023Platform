@@ -110,6 +110,7 @@ public class Intake extends SubsystemBase{
             Robot.intake.getEncoder(), 
             Units.degreesToRadians(setpoint));
         intakeLift.setVoltage(pidOutput);
+        SmartDashboard.putNumber("Intake Lift Position",intakeLiftEncoder.getDistance());
     }
 
     //Pulses the trigger in half-second increments to allow for flywheel recovery

@@ -55,10 +55,10 @@ public class Climbers extends SubsystemBase{
         Constants.m_RotatorReduction,
         SingleJointedArmSim.estimateMOI(Constants.m_RotatorLength, Constants.m_RotatorMass),
         Constants.m_RotatorLength,
-        Units.degreesToRadians(64),
-        Units.degreesToRadians(90),
+        Units.degreesToRadians(-26),
+        Units.degreesToRadians(0),
         Constants.m_RotatorMass,
-        true,
+        false,
         null
     );
     private final SingleJointedArmSim rightClimberRotate_Sim =
@@ -67,10 +67,10 @@ public class Climbers extends SubsystemBase{
         Constants.m_RotatorReduction,
         SingleJointedArmSim.estimateMOI(Constants.m_RotatorLength, Constants.m_RotatorMass),
         Constants.m_RotatorLength,
-        Units.degreesToRadians(90),
-        Units.degreesToRadians(116),
+        Units.degreesToRadians(0),
+        Units.degreesToRadians(26),
         Constants.m_RotatorMass,
-        true,
+        false,
         null
     );
 
@@ -79,13 +79,13 @@ public class Climbers extends SubsystemBase{
 
     public final Mechanism2d L_mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d L_RotatorPivot = L_mech2d.getRoot("LeftRotatorPivot", 30, 30);
-    public final MechanismLigament2d L_RotatorTower = L_RotatorPivot.append(new MechanismLigament2d("LeftRotatorTower", 30, -90));
+    public final MechanismLigament2d L_RotatorTower = L_RotatorPivot.append(new MechanismLigament2d("LeftRotatorTower", 30, 180));
     private final MechanismLigament2d L_Rotator =
         L_RotatorPivot.append(new MechanismLigament2d("Left Rotator", 30, Units.radiansToDegrees(leftClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kDarkRed)));
 
     public final Mechanism2d R_mech2d = new Mechanism2d(60, 60);
     private final MechanismRoot2d R_RotatorPivot = R_mech2d.getRoot("RightRotatorPivot", 30, 30);
-    public final MechanismLigament2d R_RotatorTower = R_RotatorPivot.append(new MechanismLigament2d("RightRotatorTower", 30, -90));
+    public final MechanismLigament2d R_RotatorTower = R_RotatorPivot.append(new MechanismLigament2d("RightRotatorTower", 30, 180));
     private final MechanismLigament2d R_Rotator =
         R_RotatorPivot.append(new MechanismLigament2d("Right Rotator", 30, Units.radiansToDegrees(rightClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kRed)));
     
@@ -138,17 +138,17 @@ public class Climbers extends SubsystemBase{
     }
 
     public void setLeftClimber(double speed){
-        leftClimber0.set(-speed);
-        leftClimber1.set(-speed);
+        leftClimber0.set(speed);
+        leftClimber1.set(speed);
     }
 
     public void setRightClimber(double speed){
-        rightClimber0.set(-speed);
-        rightClimber1.set(-speed);
+        rightClimber0.set(speed);
+        rightClimber1.set(speed);
     }
 
     public void setClimberRotation(double setpoint){
-        var lPIDOutput = L_controller.calculate(getLeftRotEncoder(), Units.degreesToRadians(90.0)-(setpoint-Units.degreesToRadians(90.0)));
+        var lPIDOutput = L_controller.calculate(getLeftRotEncoder(), -setpoint);
         setLeftClimberRotation(lPIDOutput);
         var rPIDOutput = R_controller.calculate(getRightRotEncoder(), setpoint);
         setRightClimberRotation(rPIDOutput);
@@ -185,10 +185,10 @@ public class Climbers extends SubsystemBase{
 
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Right Climber Position ", getRightClimbEncoder()/8);
-        SmartDashboard.putNumber("Left Climber Position ", getLeftClimbEncoder()/8);
-        SmartDashboard.putNumber("Right Rotator Position ", Units.radiansToDegrees(getRightRotEncoder())-84);
-        SmartDashboard.putNumber("Left Rotator Position ", 84-Units.radiansToDegrees(getLeftRotEncoder()));
+        SmartDashboard.putNumber("Right Climber Position ", getRightClimbEncoder());
+        SmartDashboard.putNumber("Left Climber Position ", getLeftClimbEncoder());
+        SmartDashboard.putNumber("Right Rotator Position ", Units.radiansToDegrees(getRightRotEncoder()));
+        SmartDashboard.putNumber("Left Rotator Position ", Units.radiansToDegrees(getLeftRotEncoder()));
     }
 
     public double getRightClimbEncoder(){
