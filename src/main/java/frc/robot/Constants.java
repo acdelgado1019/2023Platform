@@ -76,6 +76,7 @@ public class Constants {
         public static final double SHOOTER_MID_SPEED = 10;
         public static final double SHOOTER_LOW_SPEED = 7.2;
         public static final double SHOOTER_IDLE_SPEED = 3;
+        public static final double ROTATE_KP = 0.0017;
 
     //Characterization Constants
         public static final double ksVolts = 0.63969;

@@ -66,6 +66,7 @@ public class Robot extends TimedRobot {
   public enum AutoSection {
     STARTUP,
     OPENING_ACTION,
+    MOVEMENT,
     CLOSING_ACTION,
     FINISH,
     EXIT_AUTO

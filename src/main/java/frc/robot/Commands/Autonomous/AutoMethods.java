@@ -47,6 +47,23 @@ public class AutoMethods {
         Robot.intake.setTrigger(0);
     }
 
+    public static void lineDrive(double distance){
+        double error = distance - Robot.drivetrain.getAverageEncoderDistance();
+        if(Math.abs(error) > 0.1){
+                double speed = 0.2 * error;
+                Robot.drivetrain.tankDriveVolts(speed*12, speed*12);
+        }
+    }
+
+    public static void rotate(double angle){
+        double degOff = Robot.drivetrain.getNormHeading() - angle;
+        if (Math.abs(degOff)>180){degOff = -360+degOff;}
+        if(Math.abs(degOff) > 1){
+                double speed = Constants.ROTATE_KP * degOff;
+                Robot.drivetrain.tankDriveVolts(speed*12, -speed*12);
+        }
+    }
+
     // Create a voltage constraint to ensure we don't accelerate too fast
     public static DifferentialDriveVoltageConstraint getConstraint(){
         autoVoltageConstraint =
@@ -115,6 +132,19 @@ public class AutoMethods {
                 // Pass config
                 config);
                 break;
+            case FOUR_BALL_BLUE:
+                Robot.drivetrain.initPose = -90;
+                trajectory =
+                TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing goal
+                new Pose2d(7.6, 0.7, new Rotation2d(Units.degreesToRadians(90))),
+                // Pass through ball 2 and 3
+                List.of(new Translation2d(7.6, 1.85), new Translation2d(5.0, 1.85)),
+                // Turn to goal and come in range
+                new Pose2d(1.4, 1.4, new Rotation2d(-140*Math.PI*2/360)),
+                // Pass config
+                config);
+                break;
             case ONE_BALL_RED :
                 Robot.drivetrain.initPose = 180;
                 trajectory =
@@ -142,7 +172,7 @@ public class AutoMethods {
                 config);
                 break;
             case THREE_BALL_RED :
-                Robot.drivetrain.initPose = HDD.angle;
+                Robot.drivetrain.initPose = -100;
                 trajectory =
                 TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing goal
@@ -151,6 +181,20 @@ public class AutoMethods {
                 List.of(new Translation2d(8.7, 7.5), new Translation2d(11.3, 6.6)),
                 // Turn to goal and come in range
                 new Pose2d(11, 6.3, new Rotation2d(-145*Math.PI*2/360)),
+                // Pass config
+                config);
+                break;
+            
+            case FOUR_BALL_RED:
+                Robot.drivetrain.initPose = 90;
+                trajectory =
+                TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing goal
+                new Pose2d(8.8, 7.5, new Rotation2d(Units.degreesToRadians(-90))),
+                // Pass through ball 2 and 3
+                List.of(new Translation2d(8.8, 6.35), new Translation2d(11.4, 6.35)),
+                // Turn to goal and come in range
+                new Pose2d(14.8, 6.8, new Rotation2d(40*Math.PI*2/360)),
                 // Pass config
                 config);
                 break;

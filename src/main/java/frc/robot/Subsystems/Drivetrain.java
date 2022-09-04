@@ -3,7 +3,6 @@ package frc.robot.Subsystems;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Commands.DrivetrainTOCom;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -46,7 +45,6 @@ public class Drivetrain extends SubsystemBase{
 
     public DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.kTrackwidthMeters);
     public DifferentialDriveOdometry odometry;
-    private PIDController Rot_controller = new PIDController(Constants.kPDriveRot, 0, 0);
 
     public double initPose = 0.0;
 
@@ -206,13 +204,4 @@ public class Drivetrain extends SubsystemBase{
                 setRightDrivetrain(speed);
         }
     }
-
-    //Snaps Robot to a particular angle
-    public void snapToAngle(double angle){
-        double pidOutput = Rot_controller.calculate(getNormHeading(), angle);
-        SmartDashboard.putNumber("PID Rotation", pidOutput);
-        setLeftDrivetrain(-pidOutput);
-        setRightDrivetrain(-pidOutput);
-    }
-
 }

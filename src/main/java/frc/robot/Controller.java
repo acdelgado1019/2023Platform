@@ -23,7 +23,7 @@ public class Controller {
         return xboxController.getRawButton(buttonNumber);
     }
 
-    public int getPOV(){
-        return xboxController.getPOV();
+    public boolean getPOV(int test){
+        return xboxController.getPOV() == test;
     }
 }
