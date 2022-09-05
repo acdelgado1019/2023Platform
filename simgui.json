@@ -60,13 +60,9 @@
       "/SmartDashboard/SendableChooser[2]": "String Chooser"
     },
     "windows": {
-      "/FMSInfo": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "height": 8.229999542236328,
+        "image": "/Users/antoniosave/Downloads/2022_Field_Crop_White.png",
         "traj": {
           "color": [
             0.6800410151481628,
@@ -82,11 +78,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Gyro": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Intake Lift Sim": {
         "window": {
           "visible": true
@@ -98,21 +89,6 @@
         }
       },
       "/SmartDashboard/Right Rotator Sim": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/SendableChooser[0]": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/SendableChooser[1]": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/SendableChooser[2]": {
         "window": {
           "visible": true
         }
@@ -166,7 +142,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [
@@ -190,7 +169,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

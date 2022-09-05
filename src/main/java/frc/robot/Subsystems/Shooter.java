@@ -39,7 +39,6 @@ public class Shooter extends SubsystemBase{
 
         //Update Sim -> Advance clock 20 ms
         shooterSim.update(0.020);
-        SmartDashboard.putNumber("Shooter Current", shooterSim.getCurrentDrawAmps());
     }
 
     //Runs the motor with a given voltage - We want the motor to spin counter-clockwise, so the voltage needs to be negative
@@ -97,7 +96,8 @@ public class Shooter extends SubsystemBase{
 
     //Updates the shuffle/smart dashboards with flywheel spin rate in RPM
     public void updateDashboard(){
-            SmartDashboard.putNumber("Shooter Rate ", -shooterSim.getAngularVelocityRPM());
+            SmartDashboard.putNumber("Shooter Speed ", -shooterSim.getAngularVelocityRPM());
+            SmartDashboard.putBoolean("Auto Shoot Enabled", getAutoShootEnable());
     } 
 
     //Every scheduler cycle, we pass our XBox controls so we can control the shooter.

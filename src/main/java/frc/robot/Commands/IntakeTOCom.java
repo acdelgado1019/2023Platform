@@ -14,7 +14,6 @@ public class IntakeTOCom extends CommandBase{
     @Override
     public void execute(){
         Robot.intake.setHorizontalIntake(PlayerConfigs.acceptIntake ? Constants.HORIZONTAL_INTAKE_SPEED : (PlayerConfigs.rejectIntake ? -Constants.HORIZONTAL_INTAKE_SPEED : 0));
-        
         Robot.intake.setIntakeLift(PlayerConfigs.intakeLiftHi ? Constants.hiILPositionDeg : (PlayerConfigs.intakeLiftMid ? Constants.midILPositionDeg : Constants.loILPositionDeg));
     }
 }
