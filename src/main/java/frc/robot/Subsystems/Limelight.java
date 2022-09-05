@@ -53,12 +53,12 @@ public class Limelight extends SubsystemBase {
     }
 
     //Detects if the robot is in range left to right to make a shot
-    public void getRange(){
+    public boolean getRange(){
         boolean limeRange = Math.abs(tx.getDouble(0.0))<15 && tx.getDouble(0.0)!= 0.0;
         boolean localRange = Math.abs(getOffset()-Robot.drivetrain.getNormHeading())<15;
-        SmartDashboard.putNumber("Offset", Math.abs(getOffset()-Robot.drivetrain.getNormHeading()));
         SmartDashboard.putBoolean("IN RANGE", 
         (limeRange || localRange) ? true : false);
+        return limeRange || localRange;
     }
 
     //Calculates the distance away from the hub across the ground

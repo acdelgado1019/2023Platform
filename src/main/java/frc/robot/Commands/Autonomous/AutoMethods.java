@@ -41,10 +41,10 @@ public class AutoMethods {
         }
         Robot.drivetrain.setLeftDrivetrain(0);
         Robot.drivetrain.setRightDrivetrain(0);
-        Robot.intake.setTrigger(Constants.TRIGGER_SPEED);
+        Robot.shooter.setTrigger(Constants.TRIGGER_SPEED);
         Robot.ledStrip.solid(60);
-        Timer.delay(1);
-        Robot.intake.setTrigger(0);
+        Timer.delay(0.5);
+        Robot.shooter.setTrigger(0);
     }
 
     public static void lineDrive(double distance){

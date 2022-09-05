@@ -38,12 +38,12 @@ public class Robot extends TimedRobot {
   
   public static final Intake intake = new Intake(
     Constants.HORIZONTAL_INTAKE,
-    Constants.TRIGGER,
     Constants.INTAKE_LIFT
   );
 
   public static final Shooter shooter = new Shooter(
-    Constants.SHOOTER
+    Constants.SHOOTER,
+    Constants.TRIGGER
   );
 
   public static final Climbers climbers = new Climbers(

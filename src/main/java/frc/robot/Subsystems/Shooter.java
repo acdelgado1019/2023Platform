@@ -1,7 +1,11 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,12 +17,18 @@ import frc.robot.Commands.ShooterTOCom;
 public class Shooter extends SubsystemBase{
     //Use PWMSparkMax, CANSparkMax not Sim supported well right now
     private PWMSparkMax shooter;
+    private VictorSPX trigger;
+
+    private boolean pulsing = false;
+    public boolean autoShoot = true;
+
     //Simulator instance of the hardware above
     private final FlywheelSim shooterSim = new FlywheelSim(DCMotor.getNEO(1),1, 0.000666);
 
     //Shooter constructor - creates a shooter in robot memory
-    public Shooter(int shoot){
+    public Shooter(int shoot, int trig){
         shooter = new PWMSparkMax(shoot);
+        trigger = new VictorSPX(trig);
     }
 
     //While the simulation is running, this runs every clock cycle
@@ -45,6 +55,44 @@ public class Shooter extends SubsystemBase{
             Robot.ledStrip.solid(15);
         }
         return outputVoltage;
+    }
+
+    public void setTrigger(double speed) {
+        trigger.set(ControlMode.PercentOutput, speed);
+        if (speed < 0){
+            Robot.ledStrip.solid(60);
+        } else if (speed > 0){
+            Robot.ledStrip.solid(30);
+        } else {
+            Robot.ledStrip.solid(90);
+        }
+    }
+
+    //Pulses the trigger in half-second increments to allow for flywheel recovery
+    public void pulse(){
+        if (pulsing == false){
+            pulsing = true;
+        }
+        if (Timer.getFPGATimestamp() % 1 < 0.5){
+            setTrigger(Constants.TRIGGER_SPEED);
+        } else {
+            setTrigger(0);
+        }
+        SmartDashboard.putBoolean("Firing", (Timer.getFPGATimestamp() % 1)<0.5);
+    }
+
+    public void stopPulse(){
+        SmartDashboard.putBoolean("Firing", false);
+        setTrigger(0);
+        pulsing = false;
+    }
+
+    public boolean getAutoShootEnable(){
+        return autoShoot;
+    }
+
+    public void changeAutoShootState(){
+        autoShoot = !autoShoot;
     }
 
     //Updates the shuffle/smart dashboards with flywheel spin rate in RPM

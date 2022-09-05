@@ -9,7 +9,6 @@ import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
@@ -30,10 +29,7 @@ public class Intake extends SubsystemBase{
     private VictorSPX horizontalIntake;
     private PWMSparkMax intakeLift;
     private Encoder intakeLiftEncoder = new Encoder(8,9);
-    private VictorSPX trigger;
     public final PIDController Lift_controller = new PIDController(Constants.kIntakeLiftKp, 0, 0);
-
-    private boolean pulsing = false;
 
     //Simulated hardware
     private static final DCMotor m_GearBox = DCMotor.getNEO(1);
@@ -66,11 +62,9 @@ public class Intake extends SubsystemBase{
         new Color8Bit(Color.kDarkRed)));
 
     //Intake Constructor
-    public Intake (int horIntake, int vertIntake, int inLift) {
+    public Intake (int horIntake, int inLift) {
         horizontalIntake = new VictorSPX(horIntake);
-        trigger = new VictorSPX(vertIntake);
         intakeLift = new PWMSparkMax(inLift);
-
         intakeLiftEncoder.setDistancePerPulse(Constants.kIntakeLiftEncoderDistPerPulse);
     }
 
@@ -94,42 +88,12 @@ public class Intake extends SubsystemBase{
         SmartDashboard.putNumber("Intake Value", speed);
     }
 
-    public void setTrigger(double speed) {
-        trigger.set(ControlMode.PercentOutput, speed);
-        if (speed < 0){
-            Robot.ledStrip.solid(60);
-        } else if (speed > 0){
-            Robot.ledStrip.solid(30);
-        } else {
-            Robot.ledStrip.solid(90);
-        }
-    }
-
     public void setIntakeLift(double setpoint){
         var pidOutput = Robot.intake.Lift_controller.calculate(
             Robot.intake.getEncoder(), 
             Units.degreesToRadians(setpoint));
         intakeLift.setVoltage(pidOutput);
         SmartDashboard.putNumber("Intake Lift Position",intakeLiftEncoder.getDistance());
-    }
-
-    //Pulses the trigger in half-second increments to allow for flywheel recovery
-    public void pulse(){
-        if (pulsing == false){
-            pulsing = true;
-        }
-        if (Timer.getFPGATimestamp() % 1 < 0.5){
-            setTrigger(Constants.TRIGGER_SPEED);
-        } else {
-            setTrigger(0);
-        }
-        SmartDashboard.putBoolean("Firing", (Timer.getFPGATimestamp() % 1)<0.5);
-    }
-
-    public void stopPulse(){
-        SmartDashboard.putBoolean("Firing", false);
-        setTrigger(0);
-        pulsing = false;
     }
 
     public void resetEncoder(){

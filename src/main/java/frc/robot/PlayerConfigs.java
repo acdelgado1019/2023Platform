@@ -33,15 +33,14 @@ public class PlayerConfigs {
     //horizontal
     public static boolean acceptIntake;
     public static boolean rejectIntake;
-    
-    //vertical
-    public static boolean fireTrigger;
-    public static boolean rejectTrigger;
 
     //shooter
     public static boolean lowPowerShooter;
     public static boolean midPowerShooter;
     public static boolean highPowerShooter;
+    public static boolean fireTrigger;
+    public static boolean rejectTrigger;
+    public static boolean changeAutoShootState;
 
     //limelight
     public static boolean switchPipeline;
@@ -86,9 +85,10 @@ public class PlayerConfigs {
                 intakeLiftMid = Robot.controller0.getButton(Constants.RIGHT_BUMPER);
                 intakeLiftHi = Robot.controller0.getButton(Constants.RIGHT_TRIGGER);
 
-                //vertical
+                //shooter
                 fireTrigger = Robot.controller0.getButton(Constants.LEFT_BUMPER);
                 rejectTrigger = Robot.controller0.getButton(Constants.LEFT_TRIGGER);
+                changeAutoShootState = Robot.controller0.getButton(Constants.BUTTON_BACK);
 
                 //limelight
                 switchPipeline = Robot.controller0.getButton(Constants.BUTTON_START);
@@ -105,9 +105,10 @@ public class PlayerConfigs {
                 intakeLiftMid = Robot.controller0.getButton(Constants.RIGHT_BUMPER);
                 intakeLiftHi = Robot.controller0.getButton(Constants.RIGHT_TRIGGER);
 
-                //vertical
+                //shooter
                 fireTrigger = Robot.controller0.getButton(Constants.LEFT_BUMPER);
                 rejectTrigger = Robot.controller0.getButton(Constants.LEFT_TRIGGER);
+                changeAutoShootState = Robot.controller0.getButton(Constants.BUTTON_BACK);
 
                 //limelight
                 switchPipeline = Robot.controller0.getButton(Constants.BUTTON_START);

@@ -169,8 +169,8 @@ public class Drivetrain extends SubsystemBase{
         return heading;
     }
 
-    public double getTurnRate() {
-        return -gyro.getRate();
+    public boolean getStopped() {
+        return Math.abs(-m_gyro.getRate()) < 3;
     }
 
     //Drive Methods
