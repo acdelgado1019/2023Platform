@@ -39,8 +39,8 @@ public class ClimbersTOCom extends CommandBase{
                     Robot.climbers.setRightClimber(-Constants.CLIMBER_MOVEMENT_SPEED);
                     Robot.ledStrip.rainbow();
                 } else if (Robot.climbers.getClimbMode()){
-                    Robot.climbers.setLeftClimber(PlayerConfigs.climberLeftExtension);
-                    Robot.climbers.setRightClimber(PlayerConfigs.climberRightExtension);
+                    Robot.climbers.setLeftClimber(PlayerConfigs.climberLeftExtension*Constants.CLIMBER_MOVEMENT_SPEED);
+                    Robot.climbers.setRightClimber(PlayerConfigs.climberRightExtension*Constants.CLIMBER_MOVEMENT_SPEED);
                     Robot.ledStrip.rainbow();
                 } else {
                     Robot.climbers.setLeftClimber(0);

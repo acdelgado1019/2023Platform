@@ -113,6 +113,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     HDD.m_field.setRobotPose(drivetrain.odometry.getPoseMeters());
     drivetrain.m_drive.feed();
+    SmartDashboard.putNumber("Match Time",Timer.getMatchTime());
   }
 
   @Override

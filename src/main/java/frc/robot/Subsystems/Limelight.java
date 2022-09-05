@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Commands.LimelightTOCom;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -53,7 +54,11 @@ public class Limelight extends SubsystemBase {
 
     //Detects if the robot is in range left to right to make a shot
     public void getRange(){
-        SmartDashboard.putBoolean("IN RANGE", Math.abs(tx.getDouble(0.0))<15 && tx.getDouble(0.0)!= 0.0 ? true : false);
+        boolean limeRange = Math.abs(tx.getDouble(0.0))<15 && tx.getDouble(0.0)!= 0.0;
+        boolean localRange = Math.abs(getOffset()-Robot.drivetrain.getNormHeading())<15;
+        SmartDashboard.putNumber("Offset", Math.abs(getOffset()-Robot.drivetrain.getNormHeading()));
+        SmartDashboard.putBoolean("IN RANGE", 
+        (limeRange || localRange) ? true : false);
     }
 
     //Calculates the distance away from the hub across the ground
