@@ -60,6 +60,11 @@
       "/SmartDashboard/SendableChooser[2]": "String Chooser"
     },
     "windows": {
+      "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field": {
         "height": 8.229999542236328,
         "traj": {

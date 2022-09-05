@@ -80,21 +80,31 @@ public class HDD {
 
         if (desiredMode == DesiredMode.FOUR_BALL_BLUE && prevMode!=desiredMode){
             AutoMethods.resetOdometry(TrajectoryGenerator.generateTrajectory(
+                new Pose2d(7.6,1.85,new Rotation2d(Units.degreesToRadians(90))), 
+                List.of(new Translation2d(7.6, 2),new Translation2d(7.6, 3)), 
+                new Pose2d(7.6,4,new Rotation2d(Units.degreesToRadians(90))), 
+                AutoMethods.config));
+            AutoMethods.getTrajectory();
+            m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
+            AutoMethods.resetOdometry(TrajectoryGenerator.generateTrajectory(
                 new Pose2d(7.6,1.85,new Rotation2d(Units.degreesToRadians(-90))), 
                 List.of(new Translation2d(7.6, 0.6),new Translation2d(7.6, 0.3)), 
                 new Pose2d(7.6,0.0,new Rotation2d(Units.degreesToRadians(-90))), 
                 AutoMethods.config));
-            AutoMethods.getTrajectory();
-            m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
             prevMode = desiredMode;
         } if (desiredMode == DesiredMode.FOUR_BALL_RED && prevMode!=desiredMode){
+            AutoMethods.resetOdometry(TrajectoryGenerator.generateTrajectory(
+                new Pose2d(8.8,6.35,new Rotation2d(Units.degreesToRadians(-90))), 
+                List.of(new Translation2d(8.8, 5),new Translation2d(8.8, 4)), 
+                new Pose2d(8.8,3,new Rotation2d(Units.degreesToRadians(-90))), 
+                AutoMethods.config));
+            AutoMethods.getTrajectory();
+            m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
             AutoMethods.resetOdometry(TrajectoryGenerator.generateTrajectory(
                 new Pose2d(8.8,6.35,new Rotation2d(Units.degreesToRadians(90))), 
                 List.of(new Translation2d(8.8, 7),new Translation2d(8.8, 8)), 
                 new Pose2d(8.8,9.0,new Rotation2d(Units.degreesToRadians(90))), 
                 AutoMethods.config));
-            AutoMethods.getTrajectory();
-            m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
             prevMode = desiredMode;
         } else if (prevMode!=desiredMode || desiredMode == DesiredMode.BACK_UP){
             AutoMethods.getTrajectory();
