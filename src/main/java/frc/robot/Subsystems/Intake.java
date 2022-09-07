@@ -42,8 +42,8 @@ public class Intake extends SubsystemBase{
         Constants.m_IntakeLiftReduction,
         SingleJointedArmSim.estimateMOI(Constants.m_IntakeLiftLength, Constants.m_IntakeLiftMass),
         Constants.m_IntakeLiftLength,
-        Units.degreesToRadians(-90),
-        Units.degreesToRadians(90),
+        Units.degreesToRadians(0),
+        Units.degreesToRadians(55),
         Constants.m_IntakeLiftMass,
         true,
         null
@@ -93,7 +93,7 @@ public class Intake extends SubsystemBase{
             Robot.intake.getEncoder(), 
             Units.degreesToRadians(setpoint));
         intakeLift.setVoltage(pidOutput);
-        SmartDashboard.putNumber("Intake Lift Position",intakeLiftEncoder.getDistance());
+        SmartDashboard.putNumber("Intake Lift Position",Units.radiansToDegrees(intakeLiftEncoder.getDistance()));
     }
 
     public void resetEncoder(){

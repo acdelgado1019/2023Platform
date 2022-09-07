@@ -14,6 +14,20 @@ public class ShooterTOCom extends CommandBase{
 
     @Override
     public void execute(){
+        //Fire Go/No Go Logic
+        if (PlayerConfigs.fireTrigger){
+            Robot.shooter.setTrigger(Constants.TRIGGER_SPEED, true);
+        } else if (PlayerConfigs.rejectTrigger){
+            Robot.shooter.setTrigger(-Constants.TRIGGER_SPEED, false);
+        } else if (PlayerConfigs.autoTarget && Robot.shooter.getAutoShootEnable()){
+            if(Robot.limelight.getRange() && Robot.drivetrain.getStopped()){
+                Robot.shooter.setTrigger(Constants.TRIGGER_SPEED, true);
+            }
+        } else if (!Robot.climbers.getClimbMode() && Robot.autoSection == Robot.AutoSection.EXIT_AUTO){
+            Robot.shooter.setTrigger(0, false);
+            Robot.ledStrip.teamColor(Constants.teamColor);
+        }
+        
         //Shooter Speed
         Robot.shooter.setShooterMotor(
             PlayerConfigs.lowPowerShooter ? Constants.SHOOTER_LOW_SPEED : 
@@ -24,21 +38,6 @@ public class ShooterTOCom extends CommandBase{
                 )
             )
         );
-
-        //Fire Go/No Go Logic
-        if (PlayerConfigs.fireTrigger){
-            Robot.shooter.pulse();
-        } else if (PlayerConfigs.rejectTrigger){
-            Robot.shooter.setTrigger(-Constants.TRIGGER_SPEED);
-        } else if (PlayerConfigs.autoTarget && Robot.shooter.getAutoShootEnable()){
-            if(Robot.limelight.getRange() && Robot.drivetrain.getStopped()){
-                Robot.shooter.pulse();
-            }
-        } else if (!Robot.climbers.getClimbMode() && Robot.autoSection == Robot.AutoSection.EXIT_AUTO){
-            Robot.shooter.setTrigger(0);
-            Robot.shooter.stopPulse();
-            Robot.ledStrip.teamColor(Constants.teamColor);
-        }
 
         if(PlayerConfigs.changeAutoShootState != prev_Button){
             prev_Button = PlayerConfigs.changeAutoShootState;

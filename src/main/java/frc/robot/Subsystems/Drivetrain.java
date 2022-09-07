@@ -173,19 +173,6 @@ public class Drivetrain extends SubsystemBase{
         return Math.abs(-m_gyro.getRate()) < 3;
     }
 
-    //Drive Methods
-    public void setLeftDrivetrain(double speed){
-        motorLeft0.set(speed);
-        motorLeft1.set(speed);
-        m_drive.feed();
-    }
-
-    public void setRightDrivetrain(double speed){
-        motorRight0.set(-speed);
-        motorRight1.set(-speed);
-        m_drive.feed();
-    }
-
     //Adjusts the pose of the robot to center on the hub
     public void hubTrack()
     {
@@ -199,9 +186,8 @@ public class Drivetrain extends SubsystemBase{
             else if (degOff<-180){degOff = 360+degOff;}
         }
         if(Math.abs(degOff) > 1){
-                double speed = .15 * degOff/90;
-                setLeftDrivetrain(speed);
-                setRightDrivetrain(speed);
+                double speed = 12 * .15 * degOff/90;
+                tankDriveVolts(speed, -speed);
         }
     }
 }

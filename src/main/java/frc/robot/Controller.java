@@ -10,8 +10,7 @@ public class Controller {
     }
 
     public boolean getTrigger(int triggerNumber) {
-        boolean trigger = (xboxController.getRawAxis(triggerNumber) < .25) ? false : true;
-        return trigger;
+        return xboxController.getRawButton(triggerNumber);
     }
 
     public double getJoystickAxis(int axisNumber) {

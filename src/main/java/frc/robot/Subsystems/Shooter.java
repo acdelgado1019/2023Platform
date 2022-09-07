@@ -51,39 +51,19 @@ public class Shooter extends SubsystemBase{
         double outputVoltage = (4-Math.sqrt(16+0.8*(-3.5-distance)))/0.4;
         if (Double.isNaN(outputVoltage)){
             outputVoltage = Constants.SHOOTER_IDLE_SPEED;
-            Robot.ledStrip.solid(15);
+            Robot.ledStrip.solid(90);
         }
         return outputVoltage;
     }
 
-    public void setTrigger(double speed) {
+    public void setTrigger(double speed, boolean firing) {
         trigger.set(ControlMode.PercentOutput, speed);
         if (speed < 0){
             Robot.ledStrip.solid(60);
         } else if (speed > 0){
             Robot.ledStrip.solid(30);
-        } else {
-            Robot.ledStrip.solid(90);
         }
-    }
-
-    //Pulses the trigger in half-second increments to allow for flywheel recovery
-    public void pulse(){
-        if (pulsing == false){
-            pulsing = true;
-        }
-        if (Timer.getFPGATimestamp() % 1 < 0.5){
-            setTrigger(Constants.TRIGGER_SPEED);
-        } else {
-            setTrigger(0);
-        }
-        SmartDashboard.putBoolean("Firing", (Timer.getFPGATimestamp() % 1)<0.5);
-    }
-
-    public void stopPulse(){
-        SmartDashboard.putBoolean("Firing", false);
-        setTrigger(0);
-        pulsing = false;
+        SmartDashboard.putBoolean("Firing", firing);
     }
 
     public boolean getAutoShootEnable(){
