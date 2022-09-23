@@ -1,0 +1,17 @@
+-- Color Scheme --
+    --DISABLED--
+        Green/Yellow/Purple pattern - Disabled
+    --AUTONOMOUS--
+        Alternating Red/Blue - Autonomous Path Running
+        Green - Firing
+        Cyan - Out of Bounds - Shooter Idle
+        Rainbow - Autonomous Finished
+    --TELEOPERATED--
+        Red/Blue - Alliance Colors
+        Cyan - Out of Bounds - Shooter Idle
+        Green - Firing
+        Purple - Intake Running
+        Yellow - Rejecting
+        Rainbow - Climbers Engaged
+        Fading Red - Autoclimb - Mid Bar
+        Fading Rainbow - Autoclimb - Traversal Bar

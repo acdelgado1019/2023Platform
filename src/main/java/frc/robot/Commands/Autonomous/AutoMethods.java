@@ -130,6 +130,15 @@ public class AutoMethods {
                 // Pass config
                 config);
                 break;
+            case ALT_THREE_BALL_BLUE :
+                Robot.drivetrain.initPose = 70;
+                trajectory =
+                TrajectoryGenerator.generateTrajectory(
+                new Pose2d(6.5,6.0,new Rotation2d(Units.degreesToRadians(-35))),                
+                List.of(new Translation2d(6.0, 6.2),new Translation2d(4.0, 7)), 
+                new Pose2d(5.5,5.7,new Rotation2d(Units.degreesToRadians(-35))), 
+                config);
+                break;
             case FOUR_BALL_BLUE:
                 Robot.drivetrain.initPose = -90;
                 trajectory =

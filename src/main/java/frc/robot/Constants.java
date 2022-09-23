@@ -68,7 +68,6 @@ public class Constants {
         public static final double MAX_DRIVE_SPEED = .8; // Min = 0, Max = 1
         public static final double CLIMBER_MOVEMENT_SPEED = -1;
         public static final double MAX_TURN_SPEED = 0.15; // Min = 0, Max = 1;
-        public static final double LEFT_RIGHT_TRIM = 0; // Min = -1, Max = 1;+
         public static final double INTAKE_LIFT_SPEED = .3;
         public static final double HORIZONTAL_INTAKE_SPEED = -.8;
         public static final double TRIGGER_SPEED = -1;
@@ -103,14 +102,14 @@ public class Constants {
         public static final double kClimberEncoderDistPerPulse = 0.09375;
 
         // The P gain for the PID controller that drives this Rotator.
-        public static double kLRotatorKp = 1;
+        public static double kLRotatorKp = 5;
 
         // The P gain for the PID controller that drives this Rotator.
-        public static double kRRotatorKp = 1;
+        public static double kRRotatorKp = 5;
 
-        public static double RotatorFullPositionDeg = Units.degreesToRadians(21);
-        public static double RotatorUnhookPositionDeg = Units.degreesToRadians(1);
-        public static double RotatorVerticalPositionDeg = Units.degreesToRadians(0);
+        public static double RotatorFullPositionDeg = 111;
+        public static double RotatorUnhookPositionDeg = 91;
+        public static double RotatorVerticalPositionDeg = 90;
 
     //Intake Lift Constants
         public static final double m_IntakeLiftReduction = 125;

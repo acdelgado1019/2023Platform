@@ -28,7 +28,8 @@ public class HDD {
         TWO_BALL_RED,
         TWO_BALL_BLUE,
         THREE_BALL_RED,
-        THREE_BALL_BLUE, 
+        THREE_BALL_BLUE,
+        ALT_THREE_BALL_BLUE, 
         FOUR_BALL_RED, 
         FOUR_BALL_BLUE,
     }
@@ -50,6 +51,7 @@ public class HDD {
         m_chooser.addOption("Two Ball Blue", DesiredMode.TWO_BALL_BLUE);
         m_chooser.addOption("Three Ball Blue", DesiredMode.THREE_BALL_BLUE);
         m_chooser.addOption("Four Ball Blue", DesiredMode.FOUR_BALL_BLUE);
+        m_chooser.addOption("Alt Three Ball Blue", DesiredMode.ALT_THREE_BALL_BLUE);
         m_chooser.addOption("Back Up", DesiredMode.BACK_UP);
 
         // Put the choosers on the dashboard
@@ -57,6 +59,7 @@ public class HDD {
         SmartDashboard.putNumber("Custom X",4);
         SmartDashboard.putNumber("Custom Y",4.1);
         SmartDashboard.putNumber("Custom Angle",0.0);
+        SmartDashboard.putNumber("Startup Time",1.5);
 
         AutoMethods.getConstraint();
         AutoMethods.getTrajectoryConfig();
@@ -92,7 +95,7 @@ public class HDD {
                 new Pose2d(7.6,0.0,new Rotation2d(Units.degreesToRadians(-90))), 
                 AutoMethods.config));
             prevMode = desiredMode;
-        } if (desiredMode == DesiredMode.FOUR_BALL_RED && prevMode!=desiredMode){
+        } else if (desiredMode == DesiredMode.FOUR_BALL_RED && prevMode!=desiredMode){
             AutoMethods.resetOdometry(TrajectoryGenerator.generateTrajectory(
                 new Pose2d(8.8,6.35,new Rotation2d(Units.degreesToRadians(-90))), 
                 List.of(new Translation2d(8.8, 5),new Translation2d(8.8, 4)), 
@@ -104,6 +107,20 @@ public class HDD {
                 new Pose2d(8.8,6.35,new Rotation2d(Units.degreesToRadians(90))), 
                 List.of(new Translation2d(8.8, 7),new Translation2d(8.8, 8)), 
                 new Pose2d(8.8,9.0,new Rotation2d(Units.degreesToRadians(90))), 
+                AutoMethods.config));
+            prevMode = desiredMode;
+        } else if (desiredMode == DesiredMode.ALT_THREE_BALL_BLUE && prevMode!=desiredMode){
+            AutoMethods.resetOdometry(TrajectoryGenerator.generateTrajectory(
+                new Pose2d(6.65,5.7,new Rotation2d(Units.degreesToRadians(-110))), 
+                List.of(new Translation2d(6.65, 5),new Translation2d(6.65, 4)), 
+                new Pose2d(6.65,3,new Rotation2d(Units.degreesToRadians(70))), 
+                AutoMethods.config));
+            AutoMethods.getTrajectory();
+            m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
+            AutoMethods.resetOdometry(TrajectoryGenerator.generateTrajectory(
+                new Pose2d(6.65,5.7,new Rotation2d(Units.degreesToRadians(70))), 
+                List.of(new Translation2d(6.65, 5),new Translation2d(6.65, 4)), 
+                new Pose2d(6.65,3,new Rotation2d(Units.degreesToRadians(70))), 
                 AutoMethods.config));
             prevMode = desiredMode;
         } else if (prevMode!=desiredMode || desiredMode == DesiredMode.BACK_UP){

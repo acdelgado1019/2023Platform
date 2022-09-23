@@ -23,7 +23,7 @@ public class ShooterTOCom extends CommandBase{
             if(Robot.limelight.getRange() && Robot.drivetrain.getStopped()){
                 Robot.shooter.setTrigger(Constants.TRIGGER_SPEED, true);
             }
-        } else if (!Robot.climbers.getClimbMode() && Robot.autoSection == Robot.AutoSection.EXIT_AUTO){
+        } else if (!Robot.climbers.getClimbMode() && !Robot.intake.getIntaking() && Robot.autoSection == Robot.AutoSection.EXIT_AUTO){
             Robot.shooter.setTrigger(0, false);
             Robot.ledStrip.teamColor(Constants.teamColor);
         }

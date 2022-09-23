@@ -66,13 +66,7 @@ public class Drivetrain extends SubsystemBase{
             47.6,                    // The mass of the robot is 105 lbs -> 47.6 kg.
             Units.inchesToMeters(3), // The robot uses 3" radius wheels.
             Constants.kTrackwidthMeters, //Distance between wheels
-
-            // The standard deviations for measurement noise:
-            // x and y:          0.001 m
-            // heading:          0.001 rad
-            // l and r velocity: 0.1   m/s
-            // l and r position: 0.005 m
-            null//VecBuilder.fill(0.001, 0.001, 0.001, 0.1, 0.1, 0.005, 0.005)
+            null
         );
 
         m_rightMotors.setInverted(true);
@@ -170,7 +164,7 @@ public class Drivetrain extends SubsystemBase{
     }
 
     public boolean getStopped() {
-        return Math.abs(-m_gyro.getRate()) < 3;
+        return Math.abs(-gyro.getRate()) < 3;
     }
 
     //Adjusts the pose of the robot to center on the hub

@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,7 +18,6 @@ public class Shooter extends SubsystemBase{
     private PWMSparkMax shooter;
     private VictorSPX trigger;
 
-    private boolean pulsing = false;
     public boolean autoShoot = true;
 
     //Simulator instance of the hardware above
@@ -77,7 +75,7 @@ public class Shooter extends SubsystemBase{
     //Updates the shuffle/smart dashboards with flywheel spin rate in RPM
     public void updateDashboard(){
             SmartDashboard.putNumber("Shooter Speed ", -shooterSim.getAngularVelocityRPM());
-            SmartDashboard.putBoolean("Auto Shoot Enabled", getAutoShootEnable());
+            SmartDashboard.putBoolean("Auto Shoot", getAutoShootEnable());
     } 
 
     //Every scheduler cycle, we pass our XBox controls so we can control the shooter.

@@ -30,6 +30,7 @@ public class Intake extends SubsystemBase{
     private PWMSparkMax intakeLift;
     private Encoder intakeLiftEncoder = new Encoder(8,9);
     public final PIDController Lift_controller = new PIDController(Constants.kIntakeLiftKp, 0, 0);
+    private boolean intakeRunning = false;
 
     //Simulated hardware
     private static final DCMotor m_GearBox = DCMotor.getNEO(1);
@@ -85,7 +86,17 @@ public class Intake extends SubsystemBase{
 
     public void setHorizontalIntake(double speed) {
         horizontalIntake.set(ControlMode.PercentOutput, speed);
-        SmartDashboard.putNumber("Intake Value", speed);
+        if (speed > 0){
+            Robot.ledStrip.solid(30);
+            intakeRunning = true;
+        } else if (speed < 0){
+            Robot.ledStrip.solid(270);
+            intakeRunning = true;
+        } else {intakeRunning = false;}
+    }
+
+    public boolean getIntaking(){
+        return intakeRunning;
     }
 
     public void setIntakeLift(double setpoint){

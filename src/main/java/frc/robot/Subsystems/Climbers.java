@@ -55,8 +55,8 @@ public class Climbers extends SubsystemBase{
         Constants.m_RotatorReduction,
         SingleJointedArmSim.estimateMOI(Constants.m_RotatorLength, Constants.m_RotatorMass),
         Constants.m_RotatorLength,
-        Units.degreesToRadians(-26),
-        Units.degreesToRadians(0),
+        Units.degreesToRadians(90),
+        Units.degreesToRadians(116),
         Constants.m_RotatorMass,
         false,
         null
@@ -67,8 +67,8 @@ public class Climbers extends SubsystemBase{
         Constants.m_RotatorReduction,
         SingleJointedArmSim.estimateMOI(Constants.m_RotatorLength, Constants.m_RotatorMass),
         Constants.m_RotatorLength,
-        Units.degreesToRadians(0),
-        Units.degreesToRadians(26),
+        Units.degreesToRadians(90),
+        Units.degreesToRadians(116),
         Constants.m_RotatorMass,
         false,
         null
@@ -77,17 +77,17 @@ public class Climbers extends SubsystemBase{
     private final DCMotorSim rightClimber = new DCMotorSim(DCMotor.getNEO(2),1, 0.000666);
     private final DCMotorSim leftClimber = new DCMotorSim(DCMotor.getNEO(2),1, 0.000666);
 
-    public final Mechanism2d L_mech2d = new Mechanism2d(60, 60);
+    public final Mechanism2d L_mech2d = new Mechanism2d(60, 120);
     private final MechanismRoot2d L_RotatorPivot = L_mech2d.getRoot("LeftRotatorPivot", 30, 30);
-    public final MechanismLigament2d L_RotatorTower = L_RotatorPivot.append(new MechanismLigament2d("LeftRotatorTower", 30, 180));
+    public final MechanismLigament2d L_RotatorTower = L_RotatorPivot.append(new MechanismLigament2d("LeftRotatorTower", 30, -90));
     private final MechanismLigament2d L_Rotator =
-        L_RotatorPivot.append(new MechanismLigament2d("Left Rotator", 30, Units.radiansToDegrees(leftClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kDarkRed)));
+        L_RotatorPivot.append(new MechanismLigament2d("Left Rotator", 30-getLeftClimbEncoder(), Units.radiansToDegrees(leftClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kDarkRed)));
 
-    public final Mechanism2d R_mech2d = new Mechanism2d(60, 60);
+    public final Mechanism2d R_mech2d = new Mechanism2d(60, 120);
     private final MechanismRoot2d R_RotatorPivot = R_mech2d.getRoot("RightRotatorPivot", 30, 30);
-    public final MechanismLigament2d R_RotatorTower = R_RotatorPivot.append(new MechanismLigament2d("RightRotatorTower", 30, 180));
+    public final MechanismLigament2d R_RotatorTower = R_RotatorPivot.append(new MechanismLigament2d("RightRotatorTower", 30, -90));
     private final MechanismLigament2d R_Rotator =
-        R_RotatorPivot.append(new MechanismLigament2d("Right Rotator", 30, Units.radiansToDegrees(rightClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kRed)));
+        R_RotatorPivot.append(new MechanismLigament2d("Right Rotator", 30-getRightClimbEncoder(), Units.radiansToDegrees(rightClimberRotate_Sim.getAngleRads()), 6, new Color8Bit(Color.kRed)));
     
     private EncoderSim leftRotateEncoder_Sim = new EncoderSim(leftRotateEncoder);
     private EncoderSim rightRotateEncoder_Sim = new EncoderSim(rightRotateEncoder);
@@ -134,7 +134,9 @@ public class Climbers extends SubsystemBase{
         climberEncoderRight_Sim.setDistance(rightClimber.getAngularPositionRotations());
 
         R_Rotator.setAngle(Units.radiansToDegrees(rightClimberRotate_Sim.getAngleRads()));
+        R_Rotator.setLength(30-getRightClimbEncoder()/8);
         L_Rotator.setAngle(Units.radiansToDegrees(leftClimberRotate_Sim.getAngleRads()));
+        L_Rotator.setLength(30-getLeftClimbEncoder()/8);
     }
 
     public void setLeftClimber(double speed){
@@ -148,20 +150,10 @@ public class Climbers extends SubsystemBase{
     }
 
     public void setClimberRotation(double setpoint){
-        var lPIDOutput = L_controller.calculate(getLeftRotEncoder(), -setpoint);
-        setLeftClimberRotation(lPIDOutput);
-        var rPIDOutput = R_controller.calculate(getRightRotEncoder(), setpoint);
-        setRightClimberRotation(rPIDOutput);
-    }
-
-    public void setLeftClimberRotation(double voltage)
-    {
-        leftClimberRotate.setVoltage(voltage);
-    }
-
-    public void setRightClimberRotation(double voltage)
-    {
-        rightClimberRotate.setVoltage(voltage);
+        var lPIDOutput = L_controller.calculate(getLeftRotEncoder(), Units.degreesToRadians(setpoint));
+        leftClimberRotate.setVoltage(lPIDOutput);
+        var rPIDOutput = R_controller.calculate(getRightRotEncoder(), Units.degreesToRadians(setpoint));
+        rightClimberRotate.setVoltage(rPIDOutput);
     }
 
     public void setClimbMode(){
@@ -185,10 +177,10 @@ public class Climbers extends SubsystemBase{
 
     public void updateDashboard()
     {
-        SmartDashboard.putNumber("Right Climber Position ", -getRightClimbEncoder());
-        SmartDashboard.putNumber("Left Climber Position ", -getLeftClimbEncoder());
+        SmartDashboard.putNumber("Right Climber Position ", -getRightClimbEncoder()/8);
+        SmartDashboard.putNumber("Left Climber Position ", -getLeftClimbEncoder()/8);
         SmartDashboard.putNumber("Right Rotator Position ", Units.radiansToDegrees(getRightRotEncoder()));
-        SmartDashboard.putNumber("Left Rotator Position ", -Units.radiansToDegrees(getLeftRotEncoder()));
+        SmartDashboard.putNumber("Left Rotator Position ", Units.radiansToDegrees(getLeftRotEncoder()));
         SmartDashboard.putBoolean("Climber Mode", climbMode);
     }
 
