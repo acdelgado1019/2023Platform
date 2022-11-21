@@ -9,8 +9,9 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-// import frc.robot.Commands.Autonomous.AutoRoutine;
+import frc.robot.Commands.Autonomous.AutoRoutine;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Limelight;
 import frc.robot.Subsystems.LEDs;
@@ -22,6 +23,8 @@ import frc.robot.Subsystems.LEDs;
  * project.
  */
 public class Robot extends TimedRobot {  
+  private Command m_autonomousCommand;
+  
   //Subsystem Declarations
 
   public static final Drivetrain drivetrain = new Drivetrain(
@@ -33,7 +36,7 @@ public class Robot extends TimedRobot {
   
   public static final Limelight limelight = new Limelight();
 
-  public static final LEDs ledStrip = new LEDs(4,10);
+  public static final LEDs ledStrip = new LEDs(0,32);
 
   //Controllers
   public static final PS4Controller controller0 = new PS4Controller(Constants.DRIVER_CONTROLLER_0);
@@ -70,13 +73,16 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     Constants.teamColor = DriverStation.getAlliance().toString();
     ledStrip.stripeRB();
+
+    m_autonomousCommand = AutoRoutine.runAutonomous();
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    // AutoRoutine.runAutonomous();
-  }
+  public void autonomousPeriodic() {}
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -87,6 +93,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    CommandScheduler.getInstance().run();
     PlayerConfigs.getDriverConfig();
     PlayerConfigs.getCoDriverConfig();
   }

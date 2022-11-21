@@ -1,17 +1,15 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.HDD;
 import frc.robot.Commands.DrivetrainTOCom;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
-import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveMotorVoltages;
 import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.wpilibj.SerialPort;
 import com.kauailabs.navx.frc.AHRS;
@@ -29,17 +27,13 @@ public class Drivetrain extends SubsystemBase{
     public RelativeEncoder m_rightEncoder0; 
     public RelativeEncoder m_leftEncoder1;
     public RelativeEncoder m_rightEncoder1; 
+
     public final MecanumDrive m_drive;
 
     public AHRS gyro = new AHRS(SerialPort.Port.kUSB);
 
-    private Translation2d frontLeftMeters = new Translation2d(Constants.kTrackwidthMeters, Rotation2d.fromDegrees(135));
-    private Translation2d backLeftMeters = new Translation2d(Constants.kTrackwidthMeters, Rotation2d.fromDegrees(-135));
-    private Translation2d frontRightMeters = new Translation2d(Constants.kTrackwidthMeters, Rotation2d.fromDegrees(45));
-    private Translation2d backRightMeters = new Translation2d(Constants.kTrackwidthMeters, Rotation2d.fromDegrees(-45));
-    public MecanumDriveKinematics kinematics = new MecanumDriveKinematics(frontLeftMeters, backLeftMeters, frontRightMeters, backRightMeters);
     public MecanumDriveOdometry odometry;
-
+    
     public double initPose = 0.0;
 
     public Drivetrain (int l0, int l1, int r0, int r1){
@@ -60,7 +54,7 @@ public class Drivetrain extends SubsystemBase{
 
         resetEncoders();
 
-        odometry = new MecanumDriveOdometry(kinematics, Rotation2d.fromDegrees(getHeading()));
+        odometry = new MecanumDriveOdometry(DriveConstants.kinematics, Rotation2d.fromDegrees(getHeading()));
         m_leftEncoder0.setPositionConversionFactor(4.1/42);
         m_rightEncoder0.setPositionConversionFactor(4.1/42);
         m_leftEncoder1.setPositionConversionFactor(4.1/42);
@@ -70,8 +64,14 @@ public class Drivetrain extends SubsystemBase{
     //Every scheduler cycle, we pass our XBox controls so we can control the drivetrain and update its pose in the dashboards
     @Override
     public void periodic(){
-        odometry.update(gyro.getRotation2d(),
-                    getWheelSpeeds());
+        // Update the odometry in the periodic block
+        odometry.update(
+            gyro.getRotation2d(),
+            new MecanumDriveWheelSpeeds(
+                m_leftEncoder0.getVelocity(),
+                m_leftEncoder1.getVelocity(),
+                m_rightEncoder0.getVelocity(),
+                m_rightEncoder1.getVelocity()));
         HDD.m_field.setRobotPose(odometry.getPoseMeters());
 
         setDefaultCommand(new DrivetrainTOCom());
@@ -81,32 +81,48 @@ public class Drivetrain extends SubsystemBase{
         return odometry.getPoseMeters();
     }
 
-    public MecanumDriveWheelSpeeds getWheelSpeeds(){
-        return new MecanumDriveWheelSpeeds(m_leftEncoder0.getVelocity(), m_leftEncoder1.getVelocity(), m_rightEncoder0.getVelocity(), m_rightEncoder1.getVelocity()); 
-    }
-
+    /**
+     * Resets the odometry to the specified pose.
+     *
+     * @param pose The pose to which to set the odometry.
+     */
     public void resetOdometry(Pose2d pose) {
-        resetEncoders();
-        odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+        odometry.resetPosition(pose, gyro.getRotation2d());
     }
 
-    public void driveVolts(double fLeftVolts, double bLeftVolts, double fRightVolts, double bRightVolts){
-        var batteryVoltage = RobotController.getBatteryVoltage();
-        if (Math.max(
-                Math.max(Math.abs(fLeftVolts), Math.abs(bLeftVolts)), 
-                Math.max(Math.abs(fRightVolts), Math.abs(bRightVolts))
-            ) > batteryVoltage) {
-            fLeftVolts *= batteryVoltage / 12.0;
-            bLeftVolts *= batteryVoltage / 12.0;
-            fRightVolts *= batteryVoltage / 12.0;
-            bRightVolts *= batteryVoltage / 12.0;
-        }
+    public MecanumDriveWheelSpeeds getWheelSpeeds(){
+        return new MecanumDriveWheelSpeeds(
+            m_leftEncoder0.getVelocity(), 
+            m_leftEncoder1.getVelocity(), 
+            m_rightEncoder0.getVelocity(), 
+            m_rightEncoder1.getVelocity()
+        ); 
+    }
 
-        motorLeft0.setVoltage(fLeftVolts);
-        motorLeft1.setVoltage(bLeftVolts);
-        motorRight0.setVoltage(fRightVolts);
-        motorRight1.setVoltage(bRightVolts);
-        m_drive.feed();
+    /**
+     * Drives the robot at given x, y and theta speeds. Speeds range from [-1, 1] and the linear
+     * speeds have no effect on the angular speed.
+     *
+     * @param xSpeed Speed of the robot in the x direction (forward/backwards).
+     * @param ySpeed Speed of the robot in the y direction (sideways).
+     * @param rot Angular rate of the robot.
+     * @param fieldRelative Whether the provided x and y speeds are relative to the field.
+     */
+    @SuppressWarnings("ParameterName")
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+        if (fieldRelative) {
+        m_drive.driveCartesian(ySpeed, xSpeed, rot, -gyro.getAngle());
+        } else {
+        m_drive.driveCartesian(ySpeed, xSpeed, rot);
+        }
+    }
+
+    /** Sets the front left drive MotorController to a voltage. */
+    public void setDriveMotorControllersVolts(MecanumDriveMotorVoltages volts) {
+        motorLeft0.setVoltage(volts.frontLeftVoltage);
+        motorRight0.setVoltage(volts.rearLeftVoltage);
+        motorLeft1.setVoltage(volts.frontRightVoltage);
+        motorRight1.setVoltage(volts.rearRightVoltage);
     }
 
     public void resetEncoders() {
@@ -116,12 +132,62 @@ public class Drivetrain extends SubsystemBase{
         m_rightEncoder1.setPosition(0);
     }
 
+    /**
+     * Gets the front left drive encoder.
+     *
+     * @return the front left drive encoder
+     */
+    public RelativeEncoder getFrontLeftEncoder() {
+        return m_leftEncoder0;
+    }
+
+    /**
+     * Gets the rear left drive encoder.
+     *
+     * @return the rear left drive encoder
+     */
+    public RelativeEncoder getRearLeftEncoder() {
+        return m_leftEncoder1;
+    }
+
+    /**
+     * Gets the front right drive encoder.
+     *
+     * @return the front right drive encoder
+     */
+    public RelativeEncoder getFrontRightEncoder() {
+        return m_rightEncoder0;
+    }
+
+    /**
+     * Gets the rear right drive encoder.
+     *
+     * @return the rear right encoder
+     */
+    public RelativeEncoder getRearRightEncoder() {
+        return m_rightEncoder1;
+    }
+
     public void setMaxOutput(double maxOutput) {
         m_drive.setMaxOutput(maxOutput);
+    }
+
+    /** Zeroes the heading of the robot. */
+    public void zeroHeading() {
+        gyro.reset();
     }
 
     public double getHeading(){
         // get the property
         return -gyro.getAngle();
+    }
+
+    /**
+     * Returns the turn rate of the robot.
+     *
+     * @return The turn rate of the robot, in degrees per second
+     */
+    public double getTurnRate() {
+        return -gyro.getRate();
     }
 }
