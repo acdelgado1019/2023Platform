@@ -3,8 +3,6 @@ package frc.robot;
 public class PlayerConfigs {
     
     //drivetrain
-    public static double accelerator;
-    public static double steering;
     public static double xMovement;
     public static double yMovement;
     public static double turnMovement;

@@ -4,22 +4,21 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-// import frc.robot.Commands.Autonomous.AutoMethods;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Commands.Autonomous.Modes.AutoRoutineExample;
 
 public class HDD {    
-    public static SendableChooser<DesiredMode> m_chooser = new SendableChooser<>();
+    public static SendableChooser<SequentialCommandGroup> m_chooser = new SendableChooser<>();
 
     //Field display to Shuffleboard
     public static Field2d m_field;
     public static Field2d logo;
 
     //Auto Commands
-    public static enum DesiredMode {
-        TEMPLATE
-    }
+    public static AutoRoutineExample autoSFlash = new AutoRoutineExample();
 
-    public static DesiredMode desiredMode;
-    public static DesiredMode prevMode;
+    public static SequentialCommandGroup desiredMode;
+    public static SequentialCommandGroup prevMode;
   
     public static double x = 0.0;
     public static double y = 0.0;
@@ -27,7 +26,7 @@ public class HDD {
 
     public static void initBot(){
 
-        m_chooser.setDefaultOption("Template", DesiredMode.TEMPLATE);
+        m_chooser.setDefaultOption("Auto S Flash", autoSFlash);
         //m_chooser.addOption("Additional Mode", DesiredMode.ADDITIONAL_MODE);
 
         // Put the choosers on the dashboard
@@ -36,9 +35,6 @@ public class HDD {
         SmartDashboard.putNumber("Custom Y",4.1);
         SmartDashboard.putNumber("Custom Angle",0.0);
         SmartDashboard.putNumber("Startup Time",1.5);
-
-        // AutoMethods.getConstraint();
-        // AutoMethods.getTrajectoryConfig();
         
         // Create and push Field2d to SmartDashboard.
         m_field = new Field2d();
@@ -50,15 +46,5 @@ public class HDD {
 
     public static void updateStartupConfig(){
         desiredMode = m_chooser.getSelected();
-    
-        x = SmartDashboard.getNumber("Custom X", 4);
-        y = SmartDashboard.getNumber("Custom Y", 4.1);
-        angle = SmartDashboard.getNumber("Custom Angle", 0.0)-90;
-
-        // AutoMethods.getTrajectory();
-        // AutoMethods.resetOdometry(AutoMethods.trajectory);
-        // m_field.getObject("traj").setTrajectory(AutoMethods.trajectory);
-        prevMode = desiredMode;
-        
     }
 }

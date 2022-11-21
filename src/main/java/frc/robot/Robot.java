@@ -9,9 +9,8 @@ import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Commands.Autonomous.AutoRoutine;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Limelight;
 import frc.robot.Subsystems.LEDs;
@@ -23,8 +22,7 @@ import frc.robot.Subsystems.LEDs;
  * project.
  */
 public class Robot extends TimedRobot {  
-  private Command m_autonomousCommand;
-  
+  private SequentialCommandGroup autoMode;
   //Subsystem Declarations
 
   public static final Drivetrain drivetrain = new Drivetrain(
@@ -67,17 +65,16 @@ public class Robot extends TimedRobot {
     HDD.m_field.setRobotPose(drivetrain.odometry.getPoseMeters());
     drivetrain.m_drive.feed();
     SmartDashboard.putNumber("Match Time",Timer.getMatchTime());
+    SmartDashboard.putData("Scheduler", CommandScheduler.getInstance());
   }
 
   @Override
   public void autonomousInit() {
+    CommandScheduler.getInstance().cancelAll();
     Constants.teamColor = DriverStation.getAlliance().toString();
     ledStrip.stripeRB();
-
-    m_autonomousCommand = AutoRoutine.runAutonomous();
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    autoMode = HDD.m_chooser.getSelected();
+    autoMode.schedule();
   }
 
   /** This function is called periodically during autonomous. */
@@ -107,6 +104,7 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     HDD.updateStartupConfig();
     ledStrip.mardiGras();
+    SmartDashboard.putString("AUTO MODE", HDD.m_chooser.getSelected().getName());
   }
 
   /** This function is called once when test mode is enabled. */
