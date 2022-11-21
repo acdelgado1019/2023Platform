@@ -47,6 +47,7 @@
       "/LiveWindow/Ungrouped/PWMSparkMax[5]": "Motor Controller",
       "/LiveWindow/Ungrouped/PWMSparkMax[9]": "Motor Controller",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/LiveWindow/Ungrouped/navX-Sensor[2]": "Gyro",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Gyro": "Gyro",
       "/SmartDashboard/Intake Lift Sim": "Mechanism2d",
@@ -73,40 +74,7 @@
           "length": 0.0,
           "width": 0.05000000074505806
         },
-        "width": 16.459999084472656,
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Intake Lift Sim": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Left Rotator Sim": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Right Rotator Sim": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/SendableChooser[0]": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/SendableChooser[1]": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/SendableChooser[2]": {
-        "window": {
-          "visible": true
-        }
+        "width": 16.459999084472656
       }
     }
   },
@@ -135,6 +103,9 @@
       },
       "open": true
     }
+  },
+  "NetworkTables View": {
+    "visible": false
   },
   "Plot": {
     "Plot <0>": {
@@ -208,7 +179,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

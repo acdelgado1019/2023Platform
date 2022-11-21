@@ -13,7 +13,7 @@ public class DrivetrainTOCom extends CommandBase{
     double prevFRight = 0;
     double prevBRight = 0;
     double turnSpeed;
-    private MecanumDriveMotorVoltages driveVolts;
+    private MecanumDriveMotorVoltages driveVolts = new MecanumDriveMotorVoltages(0, 0, 0, 0);
 
     public DrivetrainTOCom() {
         addRequirements(Robot.drivetrain);
