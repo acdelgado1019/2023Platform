@@ -1,27 +1,23 @@
 package frc.robot.Subsystems;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Robot;
+import frc.robot.HDD;
 import frc.robot.Commands.DrivetrainTOCom;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.simulation.AnalogGyroSim;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
+import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+
+import edu.wpi.first.wpilibj.SerialPort;
+import com.kauailabs.navx.frc.AHRS;
+
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Drivetrain extends SubsystemBase{
@@ -29,22 +25,20 @@ public class Drivetrain extends SubsystemBase{
     private CANSparkMax motorLeft1;
     private CANSparkMax motorRight0;
     private CANSparkMax motorRight1;
-    private Encoder m_leftEncoder = new Encoder(0, 1);
-    private Encoder m_rightEncoder = new Encoder(2, 3); 
-    private EncoderSim m_leftEncoderSim = new EncoderSim(m_leftEncoder);
-    private EncoderSim m_rightEncoderSim = new EncoderSim(m_rightEncoder);  
-    private final MotorControllerGroup m_leftMotors;
-    private final MotorControllerGroup m_rightMotors;
-    public final DifferentialDrive m_drive;
-    public DifferentialDrivetrainSim m_driveSim;
+    public RelativeEncoder m_leftEncoder0;
+    public RelativeEncoder m_rightEncoder0; 
+    public RelativeEncoder m_leftEncoder1;
+    public RelativeEncoder m_rightEncoder1; 
+    public final MecanumDrive m_drive;
 
-    public AnalogGyro m_gyro = new AnalogGyro(1);
-    public AnalogGyroSim gyro = new AnalogGyroSim(m_gyro);
+    public AHRS gyro = new AHRS(SerialPort.Port.kUSB);
 
-    private Field2d m_field = new Field2d();
-
-    public DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.kTrackwidthMeters);
-    public DifferentialDriveOdometry odometry;
+    private Translation2d frontLeftMeters = new Translation2d(Constants.kTrackwidthMeters, Rotation2d.fromDegrees(135));
+    private Translation2d backLeftMeters = new Translation2d(Constants.kTrackwidthMeters, Rotation2d.fromDegrees(-135));
+    private Translation2d frontRightMeters = new Translation2d(Constants.kTrackwidthMeters, Rotation2d.fromDegrees(45));
+    private Translation2d backRightMeters = new Translation2d(Constants.kTrackwidthMeters, Rotation2d.fromDegrees(-45));
+    public MecanumDriveKinematics kinematics = new MecanumDriveKinematics(frontLeftMeters, backLeftMeters, frontRightMeters, backRightMeters);
+    public MecanumDriveOdometry odometry;
 
     public double initPose = 0.0;
 
@@ -54,67 +48,41 @@ public class Drivetrain extends SubsystemBase{
         motorRight0 = new CANSparkMax(r0, MotorType.kBrushless);
         motorRight1 = new CANSparkMax(r1, MotorType.kBrushless);
 
-        m_leftMotors = new MotorControllerGroup(motorLeft0,motorLeft1);
-        m_rightMotors = new MotorControllerGroup(motorRight0,motorRight1); 
+        m_leftEncoder0 = motorLeft0.getEncoder();
+        m_rightEncoder0 = motorRight0.getEncoder();
+        m_leftEncoder1 = motorLeft1.getEncoder();
+        m_rightEncoder1 = motorRight1.getEncoder();
 
-        m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
+        motorRight1.setInverted(true);
+        motorRight0.setInverted(true);
 
-        m_driveSim = new DifferentialDrivetrainSim(
-            DCMotor.getNEO(2),       // 2 NEO motors on each side of the drivetrain.
-            6,                    // 6:1 gearing reduction.
-            1,                     // MOI of 4.8 kg m^2 (need to obtain from CAD model).
-            47.6,                    // The mass of the robot is 105 lbs -> 47.6 kg.
-            Units.inchesToMeters(3), // The robot uses 3" radius wheels.
-            Constants.kTrackwidthMeters, //Distance between wheels
-            null
-        );
-
-        m_rightMotors.setInverted(true);
+        m_drive = new MecanumDrive(motorLeft0, motorLeft1, motorRight0, motorRight1);
 
         resetEncoders();
 
-        odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-        m_leftEncoder.setDistancePerPulse(4.1/42);
-        m_rightEncoder.setDistancePerPulse(4.1/42);
-        SmartDashboard.putData("Field", m_field);
+        odometry = new MecanumDriveOdometry(kinematics, Rotation2d.fromDegrees(getHeading()));
+        m_leftEncoder0.setPositionConversionFactor(4.1/42);
+        m_rightEncoder0.setPositionConversionFactor(4.1/42);
+        m_leftEncoder1.setPositionConversionFactor(4.1/42);
+        m_rightEncoder1.setPositionConversionFactor(4.1/42);
     }
 
     //Every scheduler cycle, we pass our XBox controls so we can control the drivetrain and update its pose in the dashboards
     @Override
     public void periodic(){
-        odometry.update(m_gyro.getRotation2d(),
-                    m_leftEncoder.getDistance(),
-                    m_rightEncoder.getDistance());
-        m_field.setRobotPose(odometry.getPoseMeters());
+        odometry.update(gyro.getRotation2d(),
+                    getWheelSpeeds());
+        HDD.m_field.setRobotPose(odometry.getPoseMeters());
 
         setDefaultCommand(new DrivetrainTOCom());
-    }
-
-    @Override
-    public void simulationPeriodic(){
-          // Set the inputs to the system. Note that we need to convert
-        // the [-1, 1] PWM signal to voltage by multiplying it by the
-        // robot controller voltage.
-        m_driveSim.setInputs(motorLeft1.get() * RobotController.getBatteryVoltage(),
-        motorRight1.get() * RobotController.getBatteryVoltage());
-
-        // Advance the model by 20 ms
-        m_driveSim.update(0.02);
-
-        // Update all of our sensors.
-        m_leftEncoderSim.setDistance(m_driveSim.getLeftPositionMeters());
-        m_leftEncoderSim.setRate(m_driveSim.getLeftVelocityMetersPerSecond());
-        m_rightEncoderSim.setDistance(m_driveSim.getRightPositionMeters());
-        m_rightEncoderSim.setRate(m_driveSim.getRightVelocityMetersPerSecond());
-        gyro.setAngle(-m_driveSim.getHeading().getDegrees());
     }
 
     public Pose2d getPose(){
         return odometry.getPoseMeters();
     }
 
-    public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-        return new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate()); 
+    public MecanumDriveWheelSpeeds getWheelSpeeds(){
+        return new MecanumDriveWheelSpeeds(m_leftEncoder0.getVelocity(), m_leftEncoder1.getVelocity(), m_rightEncoder0.getVelocity(), m_rightEncoder1.getVelocity()); 
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -122,24 +90,30 @@ public class Drivetrain extends SubsystemBase{
         odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     }
 
-    public void tankDriveVolts(double leftVolts, double rightVolts){
+    public void driveVolts(double fLeftVolts, double bLeftVolts, double fRightVolts, double bRightVolts){
         var batteryVoltage = RobotController.getBatteryVoltage();
-        if (Math.max(Math.abs(leftVolts), Math.abs(rightVolts)) > batteryVoltage) {
-            leftVolts *= batteryVoltage / 12.0;
-            rightVolts *= batteryVoltage / 12.0;
+        if (Math.max(
+                Math.max(Math.abs(fLeftVolts), Math.abs(bLeftVolts)), 
+                Math.max(Math.abs(fRightVolts), Math.abs(bRightVolts))
+            ) > batteryVoltage) {
+            fLeftVolts *= batteryVoltage / 12.0;
+            bLeftVolts *= batteryVoltage / 12.0;
+            fRightVolts *= batteryVoltage / 12.0;
+            bRightVolts *= batteryVoltage / 12.0;
         }
-        m_leftMotors.setVoltage(leftVolts);
-        m_rightMotors.setVoltage(-rightVolts);
+
+        motorLeft0.setVoltage(fLeftVolts);
+        motorLeft1.setVoltage(bLeftVolts);
+        motorRight0.setVoltage(fRightVolts);
+        motorRight1.setVoltage(bRightVolts);
         m_drive.feed();
     }
 
     public void resetEncoders() {
-        m_leftEncoder.reset();
-        m_rightEncoder.reset();
-    }
-
-    public double getAverageEncoderDistance() {
-        return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+        m_leftEncoder0.setPosition(0);
+        m_rightEncoder0.setPosition(0);
+        m_leftEncoder1.setPosition(0);
+        m_rightEncoder1.setPosition(0);
     }
 
     public void setMaxOutput(double maxOutput) {
@@ -149,39 +123,5 @@ public class Drivetrain extends SubsystemBase{
     public double getHeading(){
         // get the property
         return -gyro.getAngle();
-    }
-
-    public double getNormHeading(){
-        double heading = 0.0;
-        if((getHeading()+ initPose) % 360 > -180 && (getHeading()+ initPose) % 360 < 180){
-            heading = (getHeading()+ initPose)%360;
-        } else if((getHeading()+ initPose) % 360 < -180){
-            heading = 360 + (getHeading()+ initPose)%360;
-        } else if((getHeading()+ initPose) % 360 > 180){
-            heading = -360 + (getHeading()+ initPose)%360;
-        }
-        return heading;
-    }
-
-    public boolean getStopped() {
-        return Math.abs(-gyro.getRate()) < 3;
-    }
-
-    //Adjusts the pose of the robot to center on the hub
-    public void hubTrack()
-    {
-        double degOff = 0.0;
-        
-        if(Robot.limelight.getTV() != 0){
-            degOff = Robot.limelight.getTX();
-        } else {
-            degOff = getNormHeading() - Robot.limelight.getOffset();
-            if (degOff>180){degOff = -360+degOff;}
-            else if (degOff<-180){degOff = 360+degOff;}
-        }
-        if(Math.abs(degOff) > 1){
-                double speed = 12 * .15 * degOff/90;
-                tankDriveVolts(speed, -speed);
-        }
     }
 }

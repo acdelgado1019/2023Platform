@@ -11,17 +11,18 @@ public class DrivetrainTOCom extends CommandBase{
 
     @Override
     public void execute(){
-        double leftMotorSet = 0;
-        double rightMotorSet = 0;
+        double fLeftMotorSet = 0;
+        double bLeftMotorSet = 0;
+        double fRightMotorSet = 0;
+        double bRightMotorSet = 0;
 
-        // Calculate values to set motors
-        leftMotorSet = 12 * PlayerConfigs.driveSpeed * (PlayerConfigs.accelerator - (PlayerConfigs.steering * PlayerConfigs.turnSpeed));
-        rightMotorSet = 12 * PlayerConfigs.driveSpeed * (PlayerConfigs.accelerator + (PlayerConfigs.steering * PlayerConfigs.turnSpeed));
+        // TANK DRIVE
+        fLeftMotorSet = 12 * PlayerConfigs.driveSpeed * (PlayerConfigs.accelerator - (PlayerConfigs.steering * PlayerConfigs.turnSpeed));
+        fRightMotorSet = 12 * PlayerConfigs.driveSpeed * (PlayerConfigs.accelerator + (PlayerConfigs.steering * PlayerConfigs.turnSpeed));
+        bLeftMotorSet = fLeftMotorSet;
+        bRightMotorSet = fRightMotorSet;
 
         //Set motors
-        if(PlayerConfigs.autoTarget){Robot.drivetrain.hubTrack();
-        } else {
-            Robot.drivetrain.tankDriveVolts(-leftMotorSet, -rightMotorSet);
-        }
+        Robot.drivetrain.driveVolts(fLeftMotorSet, bLeftMotorSet, fRightMotorSet, bRightMotorSet);
     }
 }

@@ -1,15 +1,11 @@
 package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.Commands.LimelightTOCom;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Limelight extends SubsystemBase {
 
@@ -50,37 +46,6 @@ public class Limelight extends SubsystemBase {
     public double getTV() {
         updateData();
         return tv.getDouble(0.0);
-    }
-
-    //Detects if the robot is in range left to right to make a shot
-    public boolean getRange(){
-        boolean limeRange = Math.abs(tx.getDouble(0.0))<15 && tx.getDouble(0.0)!= 0.0;
-        boolean localRange = Math.abs(getOffset()-Robot.drivetrain.getNormHeading())<15;
-        SmartDashboard.putBoolean("IN RANGE", 
-        (limeRange || localRange) ? true : false);
-        return limeRange || localRange;
-    }
-
-    //Calculates the distance away from the hub across the ground
-    public double getDistance(){
-        if(getTV() == 1.0){distance = (Constants.goalHeight - Constants.camHeight)/Math.tan((Constants.camAngle + getTY()) * (Math.PI / 180.0))/12;
-        } else {
-            double x = Robot.drivetrain.odometry.getPoseMeters().getX();
-            double y = Robot.drivetrain.odometry.getPoseMeters().getY();
-            distance = Units.metersToFeet(Math.sqrt((x-8.2)*(x-8.2)+(y-4.1)*(y-4.1)));
-        }
-        SmartDashboard.putNumber("Distance", distance);
-        return distance;
-    }
-
-    //Calculates angle off target
-    public double getOffset(){
-        double x = (Robot.drivetrain.odometry.getPoseMeters().getX()-8.2);
-        double y = (Robot.drivetrain.odometry.getPoseMeters().getY()-4.1);
-        
-        if (x<0){offset = Units.radiansToDegrees(Math.atan(y/x));} 
-        else {offset = Units.radiansToDegrees(Math.atan(y/x))-180*(y/Math.abs(y));}
-        return offset;
     }
 
     //Switches from thresholding mode to pure camera mode

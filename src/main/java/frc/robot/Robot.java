@@ -5,19 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Commands.Autonomous.AutoRoutine;
-import frc.robot.Subsystems.Climbers;
+// import frc.robot.Commands.Autonomous.AutoRoutine;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Limelight;
-import frc.robot.Subsystems.Shooter;
-import frc.robot.Subsystems.Climbers.AutoClimbStep;
-import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.LEDs;
 
 /**
@@ -36,45 +31,13 @@ public class Robot extends TimedRobot {
     Constants.RIGHT_DRIVE_TRAIN_1
   );
   
-  public static final Intake intake = new Intake(
-    Constants.HORIZONTAL_INTAKE,
-    Constants.INTAKE_LIFT
-  );
-
-  public static final Shooter shooter = new Shooter(
-    Constants.SHOOTER,
-    Constants.TRIGGER
-  );
-
-  public static final Climbers climbers = new Climbers(
-    Constants.LEFT_CLIMBER_0,
-    Constants.LEFT_CLIMBER_1,
-    Constants.LEFT_CLIMBER_ROTATE, 
-    Constants.RIGHT_CLIMBER_0, 
-    Constants.RIGHT_CLIMBER_1, 
-    Constants.RIGHT_CLIMBER_ROTATE
-  );
-  
   public static final Limelight limelight = new Limelight();
 
   public static final LEDs ledStrip = new LEDs(4,10);
 
   //Controllers
-  public static final Controller controller0 = new Controller(Constants.DRIVER_CONTROLLER_0);
-  public static final Controller controller1 = new Controller(Constants.DRIVER_CONTROLLER_1);
-
-  public enum AutoSection {
-    STARTUP,
-    OPENING_ACTION,
-    MOVEMENT,
-    CLOSING_ACTION,
-    FINISH,
-    EXIT_AUTO
-  }
-
-  public static AutoSection autoSection;
-  public static String prevAuto = "";
-  public double timeCheck;
+  public static final PS4Controller controller0 = new PS4Controller(Constants.DRIVER_CONTROLLER_0);
+  public static final PS4Controller controller1 = new PS4Controller(Constants.DRIVER_CONTROLLER_1);
 
   //Test Timer & Flag
   Timer timer = new Timer();
@@ -86,19 +49,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     HDD.initBot();
-    PlayerConfigs.initTeamSetup();
-
-    // Put Mechanism 2d to SmartDashboard
-    SmartDashboard.putData("Left Rotator Sim", climbers.L_mech2d);
-    climbers.L_RotatorTower.setColor(new Color8Bit(Color.kGray));
-
-    SmartDashboard.putData("Right Rotator Sim", climbers.R_mech2d);
-    climbers.R_RotatorTower.setColor(new Color8Bit(Color.kDarkGray));
-
-    SmartDashboard.putData("Intake Lift Sim", intake.intake_mech2d);
-    intake.intakeTower.setColor(new Color8Bit(Color.kFirstRed));
-
-    climbers.autoClimbStep = AutoClimbStep.MANUAL_MODE;
   }
 
   /**
@@ -119,25 +69,19 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Constants.teamColor = DriverStation.getAlliance().toString();
-    climbers.resetEncoders();
-    intake.resetEncoder();
     ledStrip.stripeRB();
-    autoSection = AutoSection.STARTUP;
-    AutoRoutine.timeCheck = Timer.getFPGATimestamp();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    AutoRoutine.runAutonomous();
+    // AutoRoutine.runAutonomous();
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    autoSection = AutoSection.EXIT_AUTO;
     Constants.teamColor = DriverStation.getAlliance().toString();
-    PlayerConfigs.getPlayers();
   }
 
   /** This function is called periodically during operator control. */
@@ -161,8 +105,6 @@ public class Robot extends TimedRobot {
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
-    climbers.resetEncoders();
-    intake.resetEncoder();
   }
 
   /** This function is called periodically during test mode. */
