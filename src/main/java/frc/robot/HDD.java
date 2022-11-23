@@ -15,7 +15,7 @@ public class HDD {
     public static Field2d logo;
 
     //Auto Commands
-    public static AutoRoutineExample autoSFlash = new AutoRoutineExample();
+    public static AutoRoutineExample example = new AutoRoutineExample();
 
     public static SequentialCommandGroup desiredMode;
     public static SequentialCommandGroup prevMode;
@@ -26,7 +26,7 @@ public class HDD {
 
     public static void initBot(){
 
-        m_chooser.setDefaultOption("Auto S Flash", autoSFlash);
+        m_chooser.setDefaultOption("Example", example);
         //m_chooser.addOption("Additional Mode", DesiredMode.ADDITIONAL_MODE);
 
         // Put the choosers on the dashboard
