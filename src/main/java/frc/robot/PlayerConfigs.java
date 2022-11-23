@@ -8,8 +8,7 @@ public class PlayerConfigs {
     public static double turnMovement;
     public static double turnSpeed;
     public static double driveSpeed;
-    public static boolean modeSwitchMec;
-    public static boolean modeSwitchTank;
+    public static boolean modeSwitch;
 
     //limelight
     public static boolean switchPipeline;
@@ -23,8 +22,7 @@ public class PlayerConfigs {
         driveSpeed = 0.5;
 
         //Drivetrain change
-        modeSwitchMec = Robot.controller0.getL1Button();
-        modeSwitchTank = Robot.controller0.getR1Button();
+        modeSwitch = Robot.controller0.getCircleButtonReleased();
 
         //limelight
         switchPipeline = Robot.controller0.getCircleButton();

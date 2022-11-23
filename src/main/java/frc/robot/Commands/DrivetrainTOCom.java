@@ -43,10 +43,8 @@ public class DrivetrainTOCom extends CommandBase{
         prevFRight = driveVolts.frontRightVoltage;
         prevBRight = driveVolts.rearRightVoltage;
 
-        if (PlayerConfigs.modeSwitchMec){
-            driveMode = true;
-        } else if (PlayerConfigs.modeSwitchTank){
-            driveMode = false;
+        if (PlayerConfigs.modeSwitch){
+            driveMode = !driveMode;
         }
 
         //Set motors
